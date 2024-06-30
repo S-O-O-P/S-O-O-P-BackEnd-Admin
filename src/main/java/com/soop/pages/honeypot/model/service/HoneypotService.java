@@ -21,4 +21,8 @@ public class HoneypotService {
     public HoneypotDTO getHoneypotByHoneypotCode(int honeypotCode) {
         return honeypotMapper.getHoneypotByHoneypotCode(honeypotCode);
     }
+
+    public void updateHoneypotStatus(int honeypotCode, String newStatus) {
+        honeypotMapper.updateHoneypotStatus(honeypotCode, newStatus);
+    }
 }

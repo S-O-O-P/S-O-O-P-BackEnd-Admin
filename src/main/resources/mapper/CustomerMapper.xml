@@ -23,7 +23,8 @@
             NICKNAME,
             EMAIL,
             GENDER,
-            SIGNUP_DATE
+            SIGNUP_DATE,
+            USER_ROLE
         FROM LINKBEE_USER
     </select>
 

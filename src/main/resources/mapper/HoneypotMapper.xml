@@ -51,4 +51,13 @@
             h.HONEYPOT_CODE = #{honeypotCode};
     </select>
 
+
+    <update id="updateHoneypotStatus" parameterType="map">
+        UPDATE HONEYPOT
+        SET VISIBILITY_STATUS = #{newStatus}
+        WHERE HONEYPOT_CODE = #{honeypotCode}
+    </update>
+
+
+
 </mapper>
