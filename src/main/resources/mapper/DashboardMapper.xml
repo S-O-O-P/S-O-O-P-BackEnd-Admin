@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.soop.pages.dashboard.model.dao.DashboardMapper">
+    <!-- Result Maps -->
+    <resultMap id="HoneypotDTOResultMap" type="com.soop.pages.dashboard.model.dto.HoneypotDTO">
+        <id property="honeypotCode" column="HONEYPOT_CODE"/>
+        <result property="interestCode" column="INTEREST_CODE"/>
+        <result property="honeypotTitle" column="HONEYPOT_TITLE"/>
+        <result property="honeypotContent" column="HONEYPOT_CONTENT"/>
+        <result property="totalMember" column="TOTAL_MEMBER"/>
+        <result property="region" column="REGION"/>
+        <result property="regDate" column="REG_DATE"/>
+        <result property="endDate" column="END_DATE"/>
+        <result property="visibilityStatus" column="VISIBILITY_STATUS"/>
+        <result property="closureStatus" column="CLOSURE_STATUS"/>
+        <result property="reportCount" column="REPORT_COUNT"/>
+        <result property="userCode" column="USER_CODE"/>
+        <result property="poster" column="POSTER"/>
+
+    </resultMap>
+
+    <resultMap id="InquiryDTOResultMap" type="com.soop.pages.dashboard.model.dto.InquiryDTO">
+        <id property="inquiryCode" column="INQUIRY_CODE"/>
+        <result property="category" column="CATEGORY"/>
+        <result property="title" column="TITLE"/>
+        <result property="content" column="CONTENT"/>
+        <result property="userCode" column="USER_CODE"/>
+        <result property="inquiryDate" column="INQUIRY_DATE"/>
+        <result property="adminCode" column="ADMIN_CODE"/>
+        <result property="answerStatus" column="ANSWER_STATUS"/>
+        <result property="answer" column="ANSWER"/>
+        <result property="answerDate" column="ANSWER_DATE"/>
+    </resultMap>
+
+    <resultMap id="NoticeDTOResultMap" type="com.soop.pages.dashboard.model.dto.NoticeDTO">
+        <id property="noticeCode" column="NOTICE_CODE"/>
+        <result property="category" column="CATEGORY"/>
+        <result property="title" column="TITLE"/>
+        <result property="content" column="CONTENT"/>
+        <result property="userCode" column="USER_CODE"/>
+        <result property="regDate" column="REG_DATE"/>
+    </resultMap>
+
+<!--    <resultMap id="MemberDTOResultMap" type="com.sooproject.dashboard.model.dto.MemberDTO">-->
+<!--        <id property="userCode" column="USER_CODE"/>-->
+<!--        <result property="nickname" column="NICKNAME"/>-->
+<!--        <result property="email" column="EMAIL"/>-->
+<!--        <result property="gender" column="GENDER"/>-->
+<!--        <result property="profilePic" column="PROFILE_PIC"/>-->
+<!--        <result property="aboutMe" column="ABOUTME"/>-->
+<!--        <result property="userRole" column="USER_ROLE"/>-->
+<!--        <result property="signupDate" column="SIGNUP_DATE"/>-->
+<!--        <result property="signupPlatform" column="SIGNUP_PLATFORM"/>-->
+<!--    </resultMap>-->
+
+
+    <!-- 월별 허니팟 갯수 계산 -->
+    <select id="getMonthlyHoneyCount" resultType="map">
+        SELECT
+            DATE_FORMAT(REG_DATE, '%m월') AS month,
+            COUNT(*) AS honey_count
+        FROM
+            HONEYPOT
+        GROUP BY
+            DATE_FORMAT(REG_DATE, '%m월')
+        ORDER BY
+            month
+    </select>
+
+    <!-- 장르별 허니팟 갯수 계산 -->
+    <select id="getGenreHoneyCount" resultType="map">
+        SELECT
+            i.INTEREST_NAME AS genre,
+            COUNT(h.HONEYPOT_CODE) AS honey_count
+        FROM
+            HONEYPOT h
+                JOIN INTEREST i ON h.INTEREST_CODE = i.INTEREST_CODE
+        GROUP BY
+            i.INTEREST_NAME
+        ORDER BY
+            honey_count DESC
+    </select>
+
+    <!-- 오늘 매칭 횟수 계산 -->
+    <select id="getTodayMatchingCount" resultType="int">
+        SELECT
+            COUNT(*) AS today_matching_count
+        FROM
+            APPLICATION
+        WHERE
+            APPLICATION_DATE = CURDATE()
+    </select>
+
+    <!-- 전체 매칭 횟수 계산 -->
+    <select id="getTotalMatchingCount" resultType="int">
+        SELECT
+            COUNT(*) AS total_matching_count
+        FROM
+            APPLICATION
+    </select>
+
+    <!-- 전체 1:1 문의 갯수 계산 -->
+    <select id="getTotalInquiryCount" resultType="int">
+        SELECT
+            COUNT(*) AS total_inquiry_count
+        FROM
+            INQUIRY
+    </select>
+
+    <!-- 오늘 1:1 문의 갯수 계산 -->
+    <select id="getTodayInquiryCount" resultType="int">
+        SELECT
+            COUNT(*) AS today_inquiry_count
+        FROM
+            INQUIRY
+        WHERE
+            INQUIRY_DATE = CURDATE()
+    </select>
+
+    <!-- 오늘의 허니팟 생성 갯수 계산 -->
+    <select id="getTodayHoneyCount" resultType="int">
+        SELECT
+            COUNT(*) AS today_honey_count
+        FROM
+            HONEYPOT
+        WHERE
+            REG_DATE = CURDATE()
+    </select>
+
+    <!-- 전체 신고 횟수 계산 (null 값일 경우 0으로 반환) -->
+    <select id="getTotalReportCount" resultType="java.lang.Integer">
+        SELECT
+            COALESCE(SUM(REPORT_COUNT), 0) AS total_report_count
+        FROM
+            HONEYPOT
+    </select>
+
+    <!-- 오늘의 신고 횟수 계산 (null 값일 경우 0으로 반환) -->
+    <select id="getTodayReportCount" resultType="java.lang.Integer">
+        SELECT
+            COALESCE(SUM(REPORT_COUNT), 0) AS today_report_count
+        FROM
+            HONEYPOT
+        WHERE
+            REG_DATE = CURDATE()
+    </select>
+
+    <!-- 신고 접수 내역 조회 -->
+    <select id="getReportList" resultMap="HoneypotDTOResultMap">
+        SELECT
+            HONEYPOT_CODE,
+            HONEYPOT_TITLE,
+            REG_DATE,
+            COALESCE(REPORT_COUNT, 0) AS REPORT_COUNT
+        FROM
+            HONEYPOT
+        WHERE
+            COALESCE(REPORT_COUNT, 0) >= 0
+    </select>
+
+    <!-- 1:1 문의 내역 조회 -->
+    <select id="selectInquiryList" resultMap="InquiryDTOResultMap">
+        SELECT
+            INQUIRY_CODE,
+            TITLE,
+            CATEGORY,
+            ANSWER_STATUS
+        FROM
+            INQUIRY
+    </select>
+
+    <!-- 최신 공지 사항 조회 -->
+    <select id="getLatestNotices" resultMap="NoticeDTOResultMap">
+        SELECT
+            NOTICE_CODE,
+            TITLE,
+            REG_DATE
+        FROM
+            NOTICE
+        LIMIT 5
+    </select>
+
+
+
+
+</mapper>
