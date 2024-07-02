@@ -19,7 +19,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/cultureinfo")
 public class CultureInfoController {
-  @Autowired
+
   private final CultureInfoService cultureInfoService;
 
   public CultureInfoController(CultureInfoService cultureInfoService) {this.cultureInfoService = cultureInfoService;}
