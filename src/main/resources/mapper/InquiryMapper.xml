@@ -31,20 +31,20 @@
 
 
     <select id="getInquiryByInquiryCode" parameterType="int" resultMap="InquiryDTOResultMaps">
-SELECT
-    INQUIRY_CODE,
-    CATEGORY,
-    TITLE,
-    CONTENT,
-    ANSWER
-FROM INQUIRY
-WHERE INQUIRY_CODE = #{inquiryCode}
+        SELECT
+            INQUIRY_CODE,
+            CATEGORY,
+            TITLE,
+            CONTENT,
+            ANSWER
+        FROM INQUIRY
+        WHERE INQUIRY_CODE = #{inquiryCode}
     </select>
 
 
     <update id="updateInquiryAnswer">
         UPDATE inquiry
-        SET answer = #{answer}
+        SET answer = #{answer}, answer_date = #{answerDate}
         WHERE inquiry_code = #{inquiryCode}
     </update>
 

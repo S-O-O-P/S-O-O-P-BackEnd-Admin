@@ -5,6 +5,7 @@ import com.soop.pages.inquiry.model.dao.InquiryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -21,8 +22,8 @@ public class InquiryService {
         return inquiryMapper.getInquiryByInquiryCode(inquiryCode);
     }
 
-    public boolean updateInquiryAnswer(int inquiryCode, String answer) {
-        int rowsUpdated = inquiryMapper.updateInquiryAnswer(inquiryCode, answer);
+    public boolean updateInquiryAnswer(int inquiryCode, String answer, Date answerDate) {
+        int rowsUpdated = inquiryMapper.updateInquiryAnswer(inquiryCode, answer, answerDate);
         return rowsUpdated > 0;
     }
 
