@@ -3,7 +3,7 @@ package com.soop.pages.cultureInfo.model.dto;
 import java.util.Date;
 
 public class CultureInfoDTO {
-//   `EARLY_BIRD_CODE` INTEGER NOT NULL AUTO_INCREMENT COMMENT '얼리버드번호',
+  //   `EARLY_BIRD_CODE` INTEGER NOT NULL AUTO_INCREMENT COMMENT '얼리버드번호',
 //    `INTEREST_CODE` INTEGER NOT NULL COMMENT '관심사(장르)번호',
 //    `EB_TITLE` VARCHAR(255) NOT NULL COMMENT '제목',
 //    `EB_CONTENT` VARCHAR(1000) NOT NULL COMMENT '내용',
@@ -17,6 +17,9 @@ public class CultureInfoDTO {
 //    `SALE_END_DATE` DATE NOT NULL COMMENT '판매종료일',
 //    `USAGE_START_DATE` DATE NOT NULL COMMENT '사용시작일',
 //    `USAGE_END_DATE` DATE NOT NULL COMMENT '사용종료일',
+//    `AGE_LIMIT` VARCHAR(255) NOT NULL COMMENT '관람 연령',
+//    `USAGE_END_DATE` DATE NOT NULL COMMENT '작성일자',
+//    `PLACE` VARCHAR(255) NOT NULL COMMENT '관람 장소',
   private Integer earlyBirdCode; //얼리버드 번호
   private Integer interestCode; // 관심사(장르)번호
   private String ebTitle; // 제목
@@ -31,9 +34,13 @@ public class CultureInfoDTO {
   private Date saleEndDate; // 판매종료일
   private Date usageStartDate; // 사용시작일
   private Date usageEndDate; // 사용종료일
+  private String ageLimit; // 관람연령
+  private Date dateWritten; // 작성일자
+  private String place; // 관람장소
 
-  public CultureInfoDTO() {}
-  public CultureInfoDTO(Integer earlyBirdCode, Integer interestCode, String ebTitle, String ebContent, String region, String poster, String seller, String sellerLink, Integer regularPrice, Integer discountPrice, Date saleStartDate, Date saleEndDate, Date usageStartDate, Date usageEndDate) {
+  public CultureInfoDTO(){}
+
+  public CultureInfoDTO(Integer earlyBirdCode, Integer interestCode, String ebTitle, String ebContent, String region, String poster, String seller, String sellerLink, Integer regularPrice, Integer discountPrice, Date saleStartDate, Date saleEndDate, Date usageStartDate, Date usageEndDate, String ageLimit, Date dateWritten, String place) {
     this.earlyBirdCode = earlyBirdCode;
     this.interestCode = interestCode;
     this.ebTitle = ebTitle;
@@ -48,6 +55,9 @@ public class CultureInfoDTO {
     this.saleEndDate = saleEndDate;
     this.usageStartDate = usageStartDate;
     this.usageEndDate = usageEndDate;
+    this.ageLimit = ageLimit;
+    this.dateWritten = dateWritten;
+    this.place = place;
   }
 
   public Integer getEarlyBirdCode() {
@@ -162,6 +172,30 @@ public class CultureInfoDTO {
     this.usageEndDate = usageEndDate;
   }
 
+  public String getAgeLimit() {
+    return ageLimit;
+  }
+
+  public void setAgeLimit(String ageLimit) {
+    this.ageLimit = ageLimit;
+  }
+
+  public Date getDateWritten() {
+    return dateWritten;
+  }
+
+  public void setDateWritten(Date dateWritten) {
+    this.dateWritten = dateWritten;
+  }
+
+  public String getPlace() {
+    return place;
+  }
+
+  public void setPlace(String place) {
+    this.place = place;
+  }
+
   @Override
   public String toString() {
     return "CultureInfoDTO{" +
@@ -179,6 +213,10 @@ public class CultureInfoDTO {
             ", saleEndDate=" + saleEndDate +
             ", usageStartDate=" + usageStartDate +
             ", usageEndDate=" + usageEndDate +
+            ", ageLimit='" + ageLimit + '\'' +
+            ", dateWritten=" + dateWritten +
+            ", place='" + place + '\'' +
             '}';
   }
 }
+

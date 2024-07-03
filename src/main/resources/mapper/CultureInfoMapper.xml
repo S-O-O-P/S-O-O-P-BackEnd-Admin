@@ -18,9 +18,12 @@
         <id property="saleEndDate" column="SALE_END_DATE"/>
         <id property="usageStartDate" column="USAGE_START_DATE"/>
         <id property="usageEndDate" column="USAGE_END_DATE"/>
+        <id property="ageLimit" column="AGE_LIMIT"/>
+        <id property="dateWritten" column="DATE_WRITTEN"/>
+        <id property="place" column="PLACE"/>
     </resultMap>
 
-    <!--  얼리버드 공연/전시 정보 리스트 전체 조회  /-->
+    <!--  얼리버드 공연/전시 정보 리스트 전체 조회  -->
     <select id="selectAllCultureInfo" resultMap="cultureInfoEarlyBirdResultMap">
         SELECT
               EARLY_BIRD_CODE,
@@ -36,7 +39,147 @@
               SALE_START_DATE,
               SALE_END_DATE,
               USAGE_START_DATE,
-              USAGE_END_DATE
+              USAGE_END_DATE,
+              AGE_LIMIT,
+              DATE_WRITTEN,
+              PLACE
         FROM  EARLY_BIRD
     </select>
+
+    <!--  얼리버드 공연/전시 정보 메인 페이지 테이블 관련 항목 조회  -->
+    <select id="selectMainCultureInfo" resultMap="cultureInfoEarlyBirdResultMap">
+        SELECT
+              INTEREST_CODE,
+              EB_TITLE,
+              SALE_START_DATE,
+              DATE_WRITTEN
+        FROM  EARLY_BIRD
+    </select>
+
+    <!--  얼리버드 공연/전시 상세 정보 조회  -->
+    <select id="selectEarlyInfoByEarlyBirdCode" resultMap="cultureInfoEarlyBirdResultMap">
+        SELECT
+              EARLY_BIRD_CODE,
+              INTEREST_CODE,
+              EB_TITLE,
+              EB_CONTENT,
+              REGION,
+              POSTER,
+              SELLER,
+              SELLER_LINK,
+              REGULAR_PRICE,
+              DISCOUNT_PRICE,
+              SALE_START_DATE,
+              SALE_END_DATE,
+              USAGE_START_DATE,
+              USAGE_END_DATE,
+              AGE_LIMIT,
+              DATE_WRITTEN,
+              PLACE
+        FROM  EARLY_BIRD
+        WHERE EARLY_BIRD_CODE=#{earlyCode}
+    </select>
+
+    <!--  NEW 얼리버드 공연/전시 정보 등록  -->
+    <insert id="registerNewEarlyInfo" parameterType="com.soop.pages.cultureInfo.model.dto.CultureInfoDTO">
+        INSERT INTO EARLY_BIRD
+             (
+              INTEREST_CODE,
+              EB_TITLE,
+              EB_CONTENT,
+              REGION,
+              POSTER,
+              SELLER,
+              SELLER_LINK,
+              REGULAR_PRICE,
+              DISCOUNT_PRICE,
+              SALE_START_DATE,
+              SALE_END_DATE,
+              USAGE_START_DATE,
+              USAGE_END_DATE,
+              AGE_LIMIT,
+              DATE_WRITTEN,
+              PLACE
+              )
+        VALUES(
+            #{interestCode},
+            #{ebTitle},
+            #{ebContent},
+            #{region},
+            #{poster},
+            #{seller},
+            #{sellerLink},
+            #{regularPrice},
+            #{discountPrice},
+            #{saleStartDate},
+            #{saleEndDate},
+            #{usageStartDate},
+            #{usageEndDate},
+            #{ageLimit},
+            #{dateWritten},
+            #{place}
+        )
+    </insert>
+
+    <!--  얼리버드 공연/전시 정보 수정  -->
+    <update id="modifyEarlyInfo" parameterType="map">
+        UPDATE EARLY_BIRD
+        <set>
+            <if test="modifiedInfo.interestCode != null and modifiedInfo.interestCode != ''">
+                INTEREST_CODE = #{modifiedInfo.interestCode},
+            </if>
+            <if test="modifiedInfo.ebTitle != null and modifiedInfo.ebTitle != ''">
+                EB_TITLE = #{modifiedInfo.ebTitle},
+            </if>
+            <if test="modifiedInfo.ebContent != null and modifiedInfo.ebContent != ''">
+                EB_CONTENT = #{modifiedInfo.ebContent},
+            </if>
+            <if test="modifiedInfo.region != null and modifiedInfo.region != ''">
+                REGION = #{modifiedInfo.region},
+            </if>
+            <if test="modifiedInfo.poster != null and modifiedInfo.poster != ''">
+                POSTER = #{modifiedInfo.poster},
+            </if>
+            <if test="modifiedInfo.seller != null and modifiedInfo.seller != ''">
+                SELLER = #{modifiedInfo.seller},
+            </if>
+            <if test="modifiedInfo.sellerLink != null and modifiedInfo.sellerLink != ''">
+                SELLER_LINK = #{modifiedInfo.sellerLink},
+            </if>
+            <if test="modifiedInfo.regularPrice != null and modifiedInfo.regularPrice != ''">
+                REGULAR_PRICE = #{modifiedInfo.regularPrice},
+            </if>
+            <if test="modifiedInfo.discountPrice != null and modifiedInfo.discountPrice != ''">
+                DISCOUNT_PRICE = #{modifiedInfo.discountPrice},
+            </if>
+            <if test="modifiedInfo.saleStartDate != null">
+                SALE_START_DATE = #{modifiedInfo.saleStartDate},
+            </if>
+            <if test="modifiedInfo.saleEndDate != null">
+                SALE_END_DATE = #{modifiedInfo.saleEndDate},
+            </if>
+            <if test="modifiedInfo.usageStartDate != null">
+                USAGE_START_DATE = #{modifiedInfo.usageStartDate},
+            </if>
+            <if test="modifiedInfo.usageEndDate != null">
+                USAGE_END_DATE = #{modifiedInfo.usageEndDate},
+            </if>
+            <if test="modifiedInfo.ageLimit != null and modifiedInfo.ageLimit != ''">
+                AGE_LIMIT = #{modifiedInfo.ageLimit},
+            </if>
+            <if test="modifiedInfo.dateWritten != null and modifiedInfo.dateWritten != ''">
+                DATE_WRITTEN = #{modifiedInfo.dateWritten},
+            </if>
+            <if test="modifiedInfo.place != null and modifiedInfo.place != ''">
+                PLACE = #{modifiedInfo.place}
+            </if>
+        </set>
+        WHERE EARLY_BIRD_CODE = #{earlyCode}
+    </update>
+
+    <!--  얼리버드 공연/전시 정보 삭제  -->
+    <delete id="deleteEarlyInfo">
+        DELETE FROM EARLY_BIRD
+        WHERE EARLY_BIRD_CODE=#{earlyCode}
+    </delete>
 </mapper>
