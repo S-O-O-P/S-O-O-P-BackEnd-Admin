@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.Charset;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,9 +50,10 @@ public class InquiryController {
     @PostMapping("/{inquiryCode}/answer")
     public ResponseEntity<Void> updateInquiryAnswer(@PathVariable int inquiryCode, @RequestBody Map<String, String> request) {
         String answer = request.get("answer");
+        Date answerDate = new Date(System.currentTimeMillis()); // Current date and time
 
 
-        boolean isUpdated = inquiryService.updateInquiryAnswer(inquiryCode, answer);
+        boolean isUpdated = inquiryService.updateInquiryAnswer(inquiryCode, answer, answerDate);
         if (isUpdated) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
