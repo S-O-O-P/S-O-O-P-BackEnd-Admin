@@ -44,6 +44,7 @@
               DATE_WRITTEN,
               PLACE
         FROM  EARLY_BIRD
+        ORDER BY DATE_WRITTEN DESC
     </select>
 
     <!--  얼리버드 공연/전시 정보 메인 페이지 테이블 관련 항목 조회  -->
@@ -167,7 +168,7 @@
             <if test="modifiedInfo.ageLimit != null and modifiedInfo.ageLimit != ''">
                 AGE_LIMIT = #{modifiedInfo.ageLimit},
             </if>
-            <if test="modifiedInfo.dateWritten != null">
+            <if test="modifiedInfo.dateWritten != null and modifiedInfo.dateWritten != ''">
                 DATE_WRITTEN = #{modifiedInfo.dateWritten},
             </if>
             <if test="modifiedInfo.place != null and modifiedInfo.place != ''">
