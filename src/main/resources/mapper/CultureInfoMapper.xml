@@ -167,7 +167,7 @@
             <if test="modifiedInfo.ageLimit != null and modifiedInfo.ageLimit != ''">
                 AGE_LIMIT = #{modifiedInfo.ageLimit},
             </if>
-            <if test="modifiedInfo.dateWritten != null and modifiedInfo.dateWritten != ''">
+            <if test="modifiedInfo.dateWritten != null">
                 DATE_WRITTEN = #{modifiedInfo.dateWritten},
             </if>
             <if test="modifiedInfo.place != null and modifiedInfo.place != ''">
