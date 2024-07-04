@@ -42,6 +42,7 @@
             h.REG_DATE,
             h.CLOSURE_STATUS,
             h.REPORT_COUNT,
+            h.HONEYPOT_TITLE,
             i.INTEREST_NAME AS interest_code
         FROM
             HONEYPOT h
