@@ -5,21 +5,28 @@
 
 <mapper namespace="com.soop.pages.login.model.dao.LoginMapper">
 
-    <resultMap id="LinkBeeUserResultMap" type="com.soop.pages.login.model.dto.LinkBeeUserDTO">
-        <id property="userCode" column="USER_CODE"/>
-        <result property="honeypotCode" column="HONEYPOT_CODE"/>
-        <result property="nickname" column="NICKNAME"/>
-        <result property="email" column="EMAIL"/>
-        <result property="gender" column="GENDER"/>
-        <result property="profilePic" column="PROFILE_PIC"/>
-        <result property="aboutMe" column="ABOUTME"/>
-        <result property="userRole" column="USER_ROLE"/>
-        <result property="signupDate" column="SIGNUP_DATE"/>
-        <result property="signupPlatform" column="SIGNUP_PLATFORM"/>
+    <resultMap id="LoginResultMap" type="com.soop.pages.login.model.dto.LoginAndLinkBeeUserDTO">
+        <id property="userCode" column="USER_CODE" />
+        <result property="id" column="ID" />
+        <result property="password" column="PASSWORD" />
+        <association property="UserRole" javaType="com.soop.pages.customer.model.dto.LinkBeeUserDTO">
+            <id property="userCode" column="USER_CODE" />
+            <result property="nickname" column="NICKNAME" />
+            <result property="email" column="EMAIL" />
+            <result property="gender" column="GENDER" />
+            <result property="profilePic" column="PROFILE_PIC" />
+            <result property="aboutMe" column="ABOUTME" />
+            <result property="userRole" column="USER_ROLE" />
+            <result property="signupDate" column="SIGNUP_DATE" />
+            <result property="signupPlatform" column="SIGNUP_PLATFORM" />
+        </association>
     </resultMap>
 
-    <select id="findByNicknameAndUserCode" parameterType="map" resultMap="LinkBeeUserResultMap">
-        SELECT * FROM LINKBEE_USER WHERE NICKNAME = #{nickname} AND USER_CODE = #{userCode}
+    <select id="findByIdAndPassword" parameterType="map" resultMap="LoginResultMap">
+        SELECT l.*, u.*
+        FROM LOGIN l
+                 JOIN LINKBEE_USER u ON l.USER_CODE = u.USER_CODE
+        WHERE l.ID = #{id} AND l.PASSWORD = #{password}
     </select>
 
 </mapper>
