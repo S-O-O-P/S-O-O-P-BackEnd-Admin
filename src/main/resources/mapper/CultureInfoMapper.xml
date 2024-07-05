@@ -44,6 +44,7 @@
               DATE_WRITTEN,
               PLACE
         FROM  EARLY_BIRD
+        ORDER BY DATE_WRITTEN DESC
     </select>
 
     <!--  얼리버드 공연/전시 정보 메인 페이지 테이블 관련 항목 조회  -->
