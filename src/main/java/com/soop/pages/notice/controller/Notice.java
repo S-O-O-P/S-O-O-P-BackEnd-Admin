@@ -62,5 +62,4 @@ public class Notice {
         return new ResponseEntity<>(result, headers, HttpStatus.OK);
     }
 
-    @GetMapping
 }
