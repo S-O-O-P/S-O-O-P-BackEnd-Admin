@@ -44,17 +44,17 @@
         <result property="regDate" column="REG_DATE"/>
     </resultMap>
 
-<!--    <resultMap id="MemberDTOResultMap" type="com.sooproject.dashboard.model.dto.MemberDTO">-->
-<!--        <id property="userCode" column="USER_CODE"/>-->
-<!--        <result property="nickname" column="NICKNAME"/>-->
-<!--        <result property="email" column="EMAIL"/>-->
-<!--        <result property="gender" column="GENDER"/>-->
-<!--        <result property="profilePic" column="PROFILE_PIC"/>-->
-<!--        <result property="aboutMe" column="ABOUTME"/>-->
-<!--        <result property="userRole" column="USER_ROLE"/>-->
-<!--        <result property="signupDate" column="SIGNUP_DATE"/>-->
-<!--        <result property="signupPlatform" column="SIGNUP_PLATFORM"/>-->
-<!--    </resultMap>-->
+    <!--    <resultMap id="MemberDTOResultMap" type="com.sooproject.dashboard.model.dto.MemberDTO">-->
+    <!--        <id property="userCode" column="USER_CODE"/>-->
+    <!--        <result property="nickname" column="NICKNAME"/>-->
+    <!--        <result property="email" column="EMAIL"/>-->
+    <!--        <result property="gender" column="GENDER"/>-->
+    <!--        <result property="profilePic" column="PROFILE_PIC"/>-->
+    <!--        <result property="aboutMe" column="ABOUTME"/>-->
+    <!--        <result property="userRole" column="USER_ROLE"/>-->
+    <!--        <result property="signupDate" column="SIGNUP_DATE"/>-->
+    <!--        <result property="signupPlatform" column="SIGNUP_PLATFORM"/>-->
+    <!--    </resultMap>-->
 
 
     <!-- 월별 허니팟 갯수 계산 -->
@@ -180,6 +180,7 @@
             REG_DATE
         FROM
             NOTICE
+        ORDER BY REG_DATE DESC, NOTICE_CODE DESC
         LIMIT 5
     </select>
 
