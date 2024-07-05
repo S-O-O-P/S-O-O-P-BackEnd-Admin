@@ -18,6 +18,17 @@
 <!--        </association>-->
     </resultMap>
 
+
+
+    <select id="getNoticeList" resultMap="NoticeResultMap">
+        SELECT
+        NOTICE_CODE,
+        TITLE,
+        REG_DATE,
+        USER_CODE
+        FROM NOTICE
+    </select>
+
     <insert id="registNotice" parameterType="com.soop.pages.notice.model.dto.NoticeFileDTO">
         INSERT INTO NOTICE
         (
