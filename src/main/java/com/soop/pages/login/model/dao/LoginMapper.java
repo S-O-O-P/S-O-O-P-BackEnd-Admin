@@ -1,10 +1,11 @@
 package com.soop.pages.login.model.dao;
 
-import com.soop.pages.login.model.dto.LinkBeeUserDTO;
+import com.soop.pages.login.model.dto.LoginAndLinkBeeUserDTO;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+
+import java.util.Map;
 
 @Mapper
 public interface LoginMapper {
-     LinkBeeUserDTO findByNicknameAndUserCode(@Param("nickname") String nickname, @Param("userCode") int userCode);
+     LoginAndLinkBeeUserDTO findByIdAndPassword(Map<String, Object> params);
 }
