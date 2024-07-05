@@ -4,18 +4,17 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.soop.pages.notice.model.dao.NoticeMapper">
-    <resultMap id="NoticeResultMap" type="com.soop.pages.notice.model.dto.NoticeFileDTO">
+    <resultMap id="NoticeResultMap" type="com.soop.pages.notice.model.dto.NoticeMemberFileDTO">
         <id property="noticeCode" column="NOTICE_CODE"/>
         <result property="category" column="CATEGORY"/>
         <result property="title" column="TITLE"/>
         <result property="content" column="CONTENT"/>
         <result property="userCode" column="USER_CODE"/>
         <result property="regDate" column="REG_DATE"/>
-<!--        <association property="fileDTO" javaType="com.soop.pages.notice.model.dto.FileDTO">-->
-<!--            <id property="fileCode" column="FILE_CODE"/>-->
-<!--            <result property="name" column="Name"/>-->
-<!--            <result property="noticeCode" column="NOTICE_CODE"/>-->
-<!--        </association>-->
+        <association property="memberDTO" javaType="com.soop.pages.notice.model.dto.MemberDTO">
+            <id property="userCode" column="USER_CODE"/>
+            <result property="nickname" column="NICKNAME"/>
+        </association>
     </resultMap>
 
 
@@ -29,7 +28,7 @@
         FROM NOTICE
     </select>
 
-    <insert id="registNotice" parameterType="com.soop.pages.notice.model.dto.NoticeFileDTO">
+    <insert id="registNotice" parameterType="com.soop.pages.notice.model.dto.NoticeMemberFileDTO">
         INSERT INTO NOTICE
         (
                CATEGORY,
@@ -47,4 +46,19 @@
                #{regDate}
         )
     </insert>
+
+    <select id="noticeDetail" resultMap="NoticeResultMap">
+        SELECT
+        A.NOTICE_CODE,
+        A.CATEGORY,
+        A.TITLE,
+        A.CONTENT,
+        A.USER_CODE,
+        A.REG_DATE,
+        B.USER_CODE,
+        B.NICKNAME
+        FROM NOTICE A
+        LEFT JOIN LINKBEE_USER B ON A.USER_CODE = B.USER_CODE
+        WHERE A.NOTICE_CODE = #{id};
+    </select>
 </mapper>
