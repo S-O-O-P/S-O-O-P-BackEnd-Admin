@@ -9,7 +9,7 @@ import java.sql.Date;
 @Getter
 @Setter
 @ToString
-public class NoticeFileDTO {
+public class NoticeMemberFileDTO {
 
     private int noticeCode;
     private String category;
@@ -19,5 +19,6 @@ public class NoticeFileDTO {
     private Date regDate;
 
     private FileDTO fileDTO;
+    private MemberDTO memberDTO;
 
 }

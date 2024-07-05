@@ -1,7 +1,6 @@
 package com.soop.pages.notice.controller;
 
-import com.soop.pages.customer.model.dto.LinkBeeUserDTO;
-import com.soop.pages.notice.model.dto.NoticeFileDTO;
+import com.soop.pages.notice.model.dto.NoticeMemberFileDTO;
 import com.soop.pages.notice.model.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -29,21 +28,39 @@ public class Notice {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-        List<NoticeFileDTO> noticeInfo = noticeService.getNoticeList();
+        List<NoticeMemberFileDTO> noticeInfo = noticeService.getNoticeList();
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("noticeInfo", noticeInfo);
         return new ResponseEntity<>(responseMap, headers, HttpStatus.OK);
     }
 
 
-    @PostMapping("/noticeregist")
-    public ResponseEntity<?> registNotice(@RequestBody NoticeFileDTO noticeFileDTO) {
+    @PostMapping("/new")
+    public ResponseEntity<?> registNotice(@RequestBody NoticeMemberFileDTO noticeMemberFileDTO) {
 
-        noticeService.registNotice(noticeFileDTO);
-        System.out.println("noticeFileDTO = " + noticeFileDTO);
+        noticeService.registNotice(noticeMemberFileDTO);
+        System.out.println("noticeFileDTO = " + noticeMemberFileDTO);
 
         return ResponseEntity
-                .created(URI.create("noticeregist"))
+                .created(URI.create("new"))
                 .build();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> noticeDetail(@PathVariable("id") String id) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+
+        NoticeMemberFileDTO noticeMemberFileDTO = noticeService.noticeDetail(id);
+
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("noticeFileDTO", noticeMemberFileDTO);
+
+        return new ResponseEntity<>(result, headers, HttpStatus.OK);
+    }
+
+    @GetMapping
 }
