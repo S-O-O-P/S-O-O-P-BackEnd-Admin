@@ -26,4 +26,9 @@ public class NoticeService {
 
         return noticeMapper.noticeDetail(id);
     }
+
+    public void editNotice(String id, NoticeMemberFileDTO noticeMemberFileDTO) {
+
+        noticeMapper.editNotice(id, noticeMemberFileDTO);
+    }
 }

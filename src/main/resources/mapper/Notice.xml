@@ -61,4 +61,15 @@
         LEFT JOIN LINKBEE_USER B ON A.USER_CODE = B.USER_CODE
         WHERE A.NOTICE_CODE = #{id};
     </select>
+
+    <update id="editNotice" parameterType="com.soop.pages.notice.model.dto.NoticeMemberFileDTO">
+        UPDATE NOTICE
+        SET
+        CATEGORY = #{category},
+        TITLE = #{title},
+        CONTENT = #{content}
+        WHERE NOTICE_CODE = #{noticeCode};
+    </update>
+
+
 </mapper>

@@ -62,4 +62,15 @@ public class Notice {
         return new ResponseEntity<>(result, headers, HttpStatus.OK);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editNotice(@PathVariable("id") String id, @RequestBody NoticeMemberFileDTO noticeMemberFileDTO) {
+        noticeService.editNotice(id, noticeMemberFileDTO);
+        System.out.println("noticeFileDTO = " + noticeMemberFileDTO);
+
+        return ResponseEntity
+                .created(URI.create("/notice/" + id))
+                .build();
+    }
+
+
 }
