@@ -71,5 +71,10 @@
         WHERE NOTICE_CODE = #{noticeCode};
     </update>
 
+    <delete id="deleteNotice" parameterType="_int">
+        DELETE FROM
+               NOTICE
+         WHERE NOTICE_CODE = #{id}
+    </delete>
 
 </mapper>

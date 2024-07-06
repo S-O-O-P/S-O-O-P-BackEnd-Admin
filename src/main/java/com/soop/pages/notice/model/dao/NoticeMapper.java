@@ -13,5 +13,7 @@ public interface NoticeMapper {
 
     NoticeMemberFileDTO noticeDetail(String id);
 
-    void editNotice(String id, NoticeMemberFileDTO noticeMemberFileDTO);
+    void editNotice(NoticeMemberFileDTO noticeMemberFileDTO);
+
+    void deleteNotice(int id);
 }

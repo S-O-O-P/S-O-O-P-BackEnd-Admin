@@ -27,8 +27,12 @@ public class NoticeService {
         return noticeMapper.noticeDetail(id);
     }
 
-    public void editNotice(String id, NoticeMemberFileDTO noticeMemberFileDTO) {
+    public void editNotice(NoticeMemberFileDTO noticeMemberFileDTO) {
 
-        noticeMapper.editNotice(id, noticeMemberFileDTO);
+        noticeMapper.editNotice(noticeMemberFileDTO);
+    }
+
+    public void deleteNotice(int id) {
+        noticeMapper.deleteNotice(id);
     }
 }
