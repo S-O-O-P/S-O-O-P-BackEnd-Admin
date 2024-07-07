@@ -17,6 +17,12 @@
         </association>
     </resultMap>
 
+    <resultMap id="fileResultMap" type="com.soop.pages.notice.model.dto.FileDTO">
+        <id property="fileCode" column="FILE_CODE"/>
+        <result property="name" column="NAME"/>
+        <result property="noticeCode" column="NOTICE_CODE"/>
+    </resultMap>
+
 
 
     <select id="getNoticeList" resultMap="NoticeResultMap">
@@ -44,6 +50,20 @@
                #{content},
                #{userCode},
                #{regDate}
+        )
+    </insert>
+
+<!--    파일 등록 -->
+    <insert id="fileRegist" parameterType="com.soop.pages.notice.model.dto.FileDTO">
+        INSERT INTO ATTACHED_FILE
+        (
+               NAME,
+               NOTICE_CODE
+        )
+        VALUES
+        (
+               #{name},
+               #{noticeCode}
         )
     </insert>
 

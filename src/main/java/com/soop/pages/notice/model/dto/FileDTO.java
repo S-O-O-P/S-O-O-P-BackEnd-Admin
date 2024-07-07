@@ -13,6 +13,6 @@ public class FileDTO {
 
     private int fileCode;
     private String name;
-    private String noticeCode;
+    private int noticeCode;
 
 }

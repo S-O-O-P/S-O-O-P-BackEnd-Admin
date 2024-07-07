@@ -23,8 +23,6 @@ public class Notice {
     @Autowired
     private NoticeService noticeService;
 
-    private List<NoticeMemberFileDTO> noticeMemberFileDTOS;
-
     @GetMapping("/")
     public ResponseEntity<Map<String,Object>> getNoticeList() {
         HttpHeaders headers = new HttpHeaders();
@@ -35,7 +33,6 @@ public class Notice {
         responseMap.put("noticeInfo", noticeInfo);
         return new ResponseEntity<>(responseMap, headers, HttpStatus.OK);
     }
-
 
     @PostMapping("/new")
     public ResponseEntity<?> registNotice(@RequestBody NoticeMemberFileDTO noticeMemberFileDTO) {
