@@ -158,7 +158,8 @@
         FROM
             HONEYPOT
         WHERE
-            COALESCE(REPORT_COUNT, 0) >= 0
+            COALESCE(REPORT_COUNT, 0) > 0
+        ORDER BY REPORT_COUNT DESC
     </select>
 
     <!-- 1:1 문의 내역 조회 -->
