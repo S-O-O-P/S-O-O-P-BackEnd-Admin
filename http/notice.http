@@ -1,2 +1,2 @@
 
-GET http://localhost:8080/notice/1
+PUT http://localhost:8080/notice/1

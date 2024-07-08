@@ -14,6 +14,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/notice")
@@ -21,7 +22,6 @@ public class Notice {
 
     @Autowired
     private NoticeService noticeService;
-
 
     @GetMapping("/")
     public ResponseEntity<Map<String,Object>> getNoticeList() {
@@ -33,7 +33,6 @@ public class Notice {
         responseMap.put("noticeInfo", noticeInfo);
         return new ResponseEntity<>(responseMap, headers, HttpStatus.OK);
     }
-
 
     @PostMapping("/new")
     public ResponseEntity<?> registNotice(@RequestBody NoticeMemberFileDTO noticeMemberFileDTO) {
@@ -60,6 +59,27 @@ public class Notice {
         result.put("noticeFileDTO", noticeMemberFileDTO);
 
         return new ResponseEntity<>(result, headers, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editNotice(@PathVariable("id") int id, @RequestBody NoticeMemberFileDTO noticeMemberFileDTO) {
+
+        noticeMemberFileDTO.setNoticeCode(id);
+        noticeService.editNotice(noticeMemberFileDTO);
+        System.out.println("noticeFileDTO = " + noticeMemberFileDTO);
+
+        return ResponseEntity
+                .created(URI.create("/notice/" + id))
+                .build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") int id){
+        noticeService.deleteNotice(id);
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
 }

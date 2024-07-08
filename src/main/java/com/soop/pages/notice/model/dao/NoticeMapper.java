@@ -1,5 +1,6 @@
 package com.soop.pages.notice.model.dao;
 
+import com.soop.pages.notice.model.dto.FileDTO;
 import com.soop.pages.notice.model.dto.NoticeMemberFileDTO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,4 +13,11 @@ public interface NoticeMapper {
     List<NoticeMemberFileDTO> getNoticeList();
 
     NoticeMemberFileDTO noticeDetail(String id);
+
+    void editNotice(NoticeMemberFileDTO noticeMemberFileDTO);
+
+    void deleteNotice(int id);
+
+//    파일 등록
+    void fileRegist(FileDTO fileDTO);
 }

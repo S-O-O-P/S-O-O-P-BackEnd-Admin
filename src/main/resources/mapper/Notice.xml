@@ -17,6 +17,12 @@
         </association>
     </resultMap>
 
+    <resultMap id="fileResultMap" type="com.soop.pages.notice.model.dto.FileDTO">
+        <id property="fileCode" column="FILE_CODE"/>
+        <result property="name" column="NAME"/>
+        <result property="noticeCode" column="NOTICE_CODE"/>
+    </resultMap>
+
 
 
     <select id="getNoticeList" resultMap="NoticeResultMap">
@@ -47,6 +53,20 @@
         )
     </insert>
 
+<!--    파일 등록 -->
+    <insert id="fileRegist" parameterType="com.soop.pages.notice.model.dto.FileDTO">
+        INSERT INTO ATTACHED_FILE
+        (
+               NAME,
+               NOTICE_CODE
+        )
+        VALUES
+        (
+               #{name},
+               #{noticeCode}
+        )
+    </insert>
+
     <select id="noticeDetail" resultMap="NoticeResultMap">
         SELECT
         A.NOTICE_CODE,
@@ -61,4 +81,20 @@
         LEFT JOIN LINKBEE_USER B ON A.USER_CODE = B.USER_CODE
         WHERE A.NOTICE_CODE = #{id};
     </select>
+
+    <update id="editNotice" parameterType="com.soop.pages.notice.model.dto.NoticeMemberFileDTO">
+        UPDATE NOTICE
+        SET
+        CATEGORY = #{category},
+        TITLE = #{title},
+        CONTENT = #{content}
+        WHERE NOTICE_CODE = #{noticeCode};
+    </update>
+
+    <delete id="deleteNotice" parameterType="_int">
+        DELETE FROM
+               NOTICE
+         WHERE NOTICE_CODE = #{id}
+    </delete>
+
 </mapper>
