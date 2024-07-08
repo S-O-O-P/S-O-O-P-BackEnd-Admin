@@ -19,10 +19,10 @@ public class NoticeService {
 
         noticeMapper.registNotice(noticeMemberFileDTO);
 
-        // 파일 등록
-        fileDTO.setNoticeCode(noticeMemberFileDTO.getNoticeCode());
+        noticeMemberFileDTO.setNoticeCode(noticeMemberFileDTO.getNoticeCode());
 
-        noticeMapper.fileRegist(fileDTO);
+        System.out.println(" service 쪽");
+
     }
 
     public List<NoticeMemberFileDTO> getNoticeList() {
@@ -42,4 +42,10 @@ public class NoticeService {
     public void deleteNotice(int id) {
         noticeMapper.deleteNotice(id);
     }
+
+    public void registNoticeFile(FileDTO fileDTO) {
+
+        noticeMapper.registNoticeFile(fileDTO);
+    }
+
 }

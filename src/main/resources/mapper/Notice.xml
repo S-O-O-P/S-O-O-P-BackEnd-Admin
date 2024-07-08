@@ -11,9 +11,10 @@
         <result property="content" column="CONTENT"/>
         <result property="userCode" column="USER_CODE"/>
         <result property="regDate" column="REG_DATE"/>
-        <association property="memberDTO" javaType="com.soop.pages.notice.model.dto.MemberDTO">
-            <id property="userCode" column="USER_CODE"/>
-            <result property="nickname" column="NICKNAME"/>
+        <association property="fileDTO" javaType="com.soop.pages.notice.model.dto.FileDTO">
+            <id property="fileCode" column="FILE_CODE"/>
+            <result property="name" column="NAME"/>
+            <result property="noticeCode" column="NOTICE_CODE"/>
         </association>
     </resultMap>
 
@@ -34,7 +35,7 @@
         FROM NOTICE
     </select>
 
-    <insert id="registNotice" parameterType="com.soop.pages.notice.model.dto.NoticeMemberFileDTO">
+    <insert id="registNotice" parameterType="com.soop.pages.notice.model.dto.NoticeMemberFileDTO" useGeneratedKeys="true" keyProperty="noticeCode">
         INSERT INTO NOTICE
         (
                CATEGORY,
@@ -54,7 +55,7 @@
     </insert>
 
 <!--    파일 등록 -->
-    <insert id="fileRegist" parameterType="com.soop.pages.notice.model.dto.FileDTO">
+    <insert id="registNoticeFile" parameterType="com.soop.pages.notice.model.dto.FileDTO">
         INSERT INTO ATTACHED_FILE
         (
                NAME,
@@ -67,7 +68,7 @@
         )
     </insert>
 
-    <select id="noticeDetail" resultMap="NoticeResultMap">
+    <select id="noticeDetail" resultMap="NoticeResultMap" parameterType="_int">
         SELECT
         A.NOTICE_CODE,
         A.CATEGORY,
@@ -75,10 +76,11 @@
         A.CONTENT,
         A.USER_CODE,
         A.REG_DATE,
-        B.USER_CODE,
-        B.NICKNAME
+        B.FILE_CODE,
+        B.NAME,
+        B.NOTICE_CODE
         FROM NOTICE A
-        LEFT JOIN LINKBEE_USER B ON A.USER_CODE = B.USER_CODE
+        LEFT JOIN ATTACHED_FILE B ON A.NOTICE_CODE = B.NOTICE_CODE
         WHERE A.NOTICE_CODE = #{id};
     </select>
 
