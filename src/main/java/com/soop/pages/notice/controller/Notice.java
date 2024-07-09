@@ -1,7 +1,7 @@
 package com.soop.pages.notice.controller;
 
 import com.soop.pages.notice.model.dto.FileDTO;
-import com.soop.pages.notice.model.dto.NoticeMemberFileDTO;
+import com.soop.pages.notice.model.dto.NoticeDTO;
 import com.soop.pages.notice.model.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -15,8 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
@@ -26,7 +24,7 @@ public class Notice {
     @Autowired
     private NoticeService noticeService;
 
-    NoticeMemberFileDTO noticeMemberFileDTO = new NoticeMemberFileDTO();
+    NoticeDTO noticeDTO = new NoticeDTO();
     FileDTO fileDTO = new FileDTO();
 
     @GetMapping("/")
@@ -34,7 +32,7 @@ public class Notice {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-        List<NoticeMemberFileDTO> noticeInfo = noticeService.getNoticeList();
+        List<NoticeDTO> noticeInfo = noticeService.getNoticeList();
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("noticeInfo", noticeInfo);
         return new ResponseEntity<>(responseMap, headers, HttpStatus.OK);
@@ -68,17 +66,17 @@ public class Notice {
 
         Date now = new Date();
 
-        noticeMemberFileDTO.setCategory(category);
-        noticeMemberFileDTO.setTitle(title);
-        noticeMemberFileDTO.setContent(content);
-        noticeMemberFileDTO.setUserCode(userCode);
-        noticeMemberFileDTO.setRegDate(now);
+        noticeDTO.setCategory(category);
+        noticeDTO.setTitle(title);
+        noticeDTO.setContent(content);
+        noticeDTO.setUserCode(userCode);
+        noticeDTO.setRegDate(now);
 
-        noticeService.registNotice(noticeMemberFileDTO);
+        noticeService.registNotice(noticeDTO);
 
-        fileDTO.setName(originFileName);
+        fileDTO.setName(savedName);
 
-        fileDTO.setNoticeCode(noticeMemberFileDTO.getNoticeCode());
+        fileDTO.setNoticeCode(noticeDTO.getNoticeCode());
 
         noticeService.registNoticeFile(fileDTO);
 
@@ -87,29 +85,39 @@ public class Notice {
                 .build();
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> noticeDetail(@PathVariable("id") String id) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
+        int code = Integer.parseInt(id);
 
-        NoticeMemberFileDTO noticeMemberFileDTO = noticeService.noticeDetail(id);
+        NoticeDTO noticeDTO1 = noticeService.noticeDetail(code);
+
+        FileDTO fileDTO1 = noticeService.noticeDetailFile(code);
 
         Map<String, Object> result = new HashMap<>();
 
-        result.put("noticeFileDTO", noticeMemberFileDTO);
+        result.put("noticeDTO", noticeDTO1);
+        result.put("fileDTO", fileDTO1);
 
         return new ResponseEntity<>(result, headers, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> editNotice(@PathVariable("id") int id, @RequestBody NoticeMemberFileDTO noticeMemberFileDTO) {
+    @GetMapping(value = "/image", produces = MediaType.IMAGE_PNG_VALUE)
+    public byte[] image(@RequestParam String name) throws IOException {
+        String root = System.getProperty("user.dir");
+        String filePath = root + "/src/main/resources/static/uploadImages/";
 
-        noticeMemberFileDTO.setNoticeCode(id);
-        noticeService.editNotice(noticeMemberFileDTO);
-        System.out.println("noticeFileDTO = " + noticeMemberFileDTO);
+        return getClass().getResourceAsStream(filePath + name).readAllBytes();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> editNotice(@PathVariable("id") int id, @RequestBody NoticeDTO noticeDTO1, @RequestParam String fileName) {
+
+        noticeDTO1.setNoticeCode(id);
+        noticeService.editNotice(noticeDTO);
 
         return ResponseEntity
                 .created(URI.create("/notice/" + id))
@@ -117,7 +125,25 @@ public class Notice {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") int id){
+    public ResponseEntity<?> delete(@PathVariable("id") int id, @RequestBody String fileName) {
+
+//        String fileName = fileDTO.getName();
+//        System.out.println("fileDTO = " + fileDTO.getName());
+
+//        System.out.println("fileName = " + fileName.getName());
+        System.out.println("fileName = " + fileName);
+
+        String file = "src/main/resources/static/uploadImages/" + fileName;
+
+        File fileDelete = new File(file);
+        if(fileDelete.delete()) {
+            // 파일을 삭제합니다.
+            System.out.println("파일 삭제 성공");
+
+        } else {
+            System.out.println("파일 삭제 실패");
+        }
+
         noticeService.deleteNotice(id);
 
         return ResponseEntity
