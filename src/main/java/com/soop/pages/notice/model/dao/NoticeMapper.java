@@ -1,22 +1,26 @@
 package com.soop.pages.notice.model.dao;
 
 import com.soop.pages.notice.model.dto.FileDTO;
-import com.soop.pages.notice.model.dto.NoticeMemberFileDTO;
+import com.soop.pages.notice.model.dto.NoticeDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 @Mapper
 public interface NoticeMapper {
-    void registNotice(NoticeMemberFileDTO noticeMemberFileDTO);
+    void registNotice(NoticeDTO noticeMemberFileDTO);
 
-    List<NoticeMemberFileDTO> getNoticeList();
+    List<NoticeDTO> getNoticeList();
 
-    NoticeMemberFileDTO noticeDetail(String id);
+    NoticeDTO noticeDetail(int id);
 
-    void editNotice(NoticeMemberFileDTO noticeMemberFileDTO);
-
-    void deleteNotice(int id);
+    void editNotice(NoticeDTO noticeMemberFileDTO);
 
     void registNoticeFile(FileDTO fileDTO);
+
+    FileDTO noticeDetailFile(int id);
+
+    void deleteNotice(int id);
+    void deleteNoticeFile(int id);
+
 }

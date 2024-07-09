@@ -2,7 +2,7 @@ package com.soop.pages.notice.model.service;
 
 import com.soop.pages.notice.model.dao.NoticeMapper;
 import com.soop.pages.notice.model.dto.FileDTO;
-import com.soop.pages.notice.model.dto.NoticeMemberFileDTO;
+import com.soop.pages.notice.model.dto.NoticeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,32 +15,31 @@ public class NoticeService {
     private NoticeMapper noticeMapper;
     private FileDTO fileDTO;
 
-    public void registNotice(NoticeMemberFileDTO noticeMemberFileDTO) {
+    public void registNotice(NoticeDTO noticeMemberFileDTO) {
 
         noticeMapper.registNotice(noticeMemberFileDTO);
 
         noticeMemberFileDTO.setNoticeCode(noticeMemberFileDTO.getNoticeCode());
 
-        System.out.println(" service 쪽");
-
     }
 
-    public List<NoticeMemberFileDTO> getNoticeList() {
+    public List<NoticeDTO> getNoticeList() {
         return noticeMapper.getNoticeList();
     }
 
-    public NoticeMemberFileDTO noticeDetail(String id) {
+    public NoticeDTO noticeDetail(int id) {
 
         return noticeMapper.noticeDetail(id);
     }
 
-    public void editNotice(NoticeMemberFileDTO noticeMemberFileDTO) {
+    public FileDTO noticeDetailFile(int id) {
 
-        noticeMapper.editNotice(noticeMemberFileDTO);
+        return noticeMapper.noticeDetailFile(id);
     }
 
-    public void deleteNotice(int id) {
-        noticeMapper.deleteNotice(id);
+    public void editNotice(NoticeDTO noticeMemberFileDTO) {
+
+        noticeMapper.editNotice(noticeMemberFileDTO);
     }
 
     public void registNoticeFile(FileDTO fileDTO) {
@@ -48,4 +47,18 @@ public class NoticeService {
         noticeMapper.registNoticeFile(fileDTO);
     }
 
+    public void deleteNotice(int id) {
+
+        noticeMapper.deleteNoticeFile(id);
+
+        noticeMapper.deleteNotice(id);
+
+    }
+
+    public void editNoticeFile(FileDTO fileDTO) {
+
+        noticeMapper.registNoticeFile(fileDTO);
+
+        fileDTO.setNoticeCode(fileDTO.getNoticeCode());
+    }
 }
