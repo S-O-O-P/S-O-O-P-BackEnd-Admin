@@ -68,7 +68,7 @@
         )
     </insert>
 
-    <select id="noticeDetail" resultMap="NoticeResultMap" parameterType="_int">
+    <select id="noticeDetail" resultMap="NoticeResultMap" parameterType="int">
         SELECT
         A.NOTICE_CODE,
         A.CATEGORY,
@@ -89,9 +89,11 @@
         SET
         CATEGORY = #{category},
         TITLE = #{title},
+        REG_DATE= #{regDate},
         CONTENT = #{content}
         WHERE NOTICE_CODE = #{noticeCode};
     </update>
+
 
     <delete id="deleteNotice" parameterType="_int">
         DELETE FROM

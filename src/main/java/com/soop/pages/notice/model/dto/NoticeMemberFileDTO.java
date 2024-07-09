@@ -2,7 +2,7 @@ package com.soop.pages.notice.model.dto;
 
 import lombok.*;
 
-import java.util.Date;
+import java.sql.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
