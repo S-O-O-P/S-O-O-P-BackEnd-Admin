@@ -24,8 +24,6 @@
         <result property="noticeCode" column="NOTICE_CODE"/>
     </resultMap>
 
-
-
     <select id="getNoticeList" resultMap="NoticeResultMap">
         SELECT
         NOTICE_CODE,
@@ -54,7 +52,7 @@
         )
     </insert>
 
-    <!--    파일 등록 -->
+    <!-- 파일 등록 -->
     <insert id="registNoticeFile" parameterType="com.soop.pages.notice.model.dto.FileDTO">
         INSERT INTO ATTACHED_FILE
         (
@@ -81,24 +79,24 @@
         B.NOTICE_CODE
         FROM NOTICE A
         LEFT JOIN ATTACHED_FILE B ON A.NOTICE_CODE = B.NOTICE_CODE
-        WHERE A.NOTICE_CODE = #{id};
+        WHERE A.NOTICE_CODE = #{id}
     </select>
 
     <update id="editNotice" parameterType="com.soop.pages.notice.model.dto.NoticeMemberFileDTO">
         UPDATE NOTICE
-        SET
-        CATEGORY = #{category},
+        SET CATEGORY = #{category},
         TITLE = #{title},
-        REG_DATE= #{regDate},
-        CONTENT = #{content}
-        WHERE NOTICE_CODE = #{noticeCode};
+        CONTENT = #{content},
+        USER_CODE = #{userCode},
+        REG_DATE = #{regDate}
+        WHERE NOTICE_CODE = #{noticeCode}
     </update>
 
-
-    <delete id="deleteNotice" parameterType="_int">
-        DELETE FROM
-        NOTICE
-        WHERE NOTICE_CODE = #{id}
+    <delete id="deleteNotice" parameterType="int">
+        DELETE FROM NOTICE WHERE NOTICE_CODE = #{id}
     </delete>
 
+    <delete id="deleteNoticeFile" parameterType="int">
+        DELETE FROM ATTACHED_FILE WHERE NOTICE_CODE = #{id}
+    </delete>
 </mapper>

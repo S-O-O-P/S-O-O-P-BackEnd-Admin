@@ -13,42 +13,28 @@ public class NoticeService {
 
     @Autowired
     private NoticeMapper noticeMapper;
-    private FileDTO fileDTO;
-
-    public void registNotice(NoticeMemberFileDTO noticeMemberFileDTO) {
-
-        noticeMapper.registNotice(noticeMemberFileDTO);
-
-        noticeMemberFileDTO.setNoticeCode(noticeMemberFileDTO.getNoticeCode());
-
-        System.out.println(" service 쪽");
-
-    }
 
     public List<NoticeMemberFileDTO> getNoticeList() {
         return noticeMapper.getNoticeList();
     }
 
-    public NoticeMemberFileDTO noticeDetail(int id) {
+    public void registNotice(NoticeMemberFileDTO noticeMemberFileDTO) {
+        noticeMapper.registNotice(noticeMemberFileDTO);
+    }
 
+    public void registNoticeFile(FileDTO fileDTO) {
+        noticeMapper.registNoticeFile(fileDTO);
+    }
+
+    public NoticeMemberFileDTO noticeDetail(int id) {
         return noticeMapper.noticeDetail(id);
     }
 
     public void editNotice(NoticeMemberFileDTO noticeMemberFileDTO) {
-
         noticeMapper.editNotice(noticeMemberFileDTO);
     }
-
-
-
 
     public void deleteNotice(int id) {
         noticeMapper.deleteNotice(id);
     }
-
-    public void registNoticeFile(FileDTO fileDTO) {
-
-        noticeMapper.registNoticeFile(fileDTO);
-    }
-
 }

@@ -8,19 +8,17 @@ import java.util.List;
 
 @Mapper
 public interface NoticeMapper {
-    void registNotice(NoticeMemberFileDTO noticeMemberFileDTO);
-
     List<NoticeMemberFileDTO> getNoticeList();
 
+    void registNotice(NoticeMemberFileDTO noticeMemberFileDTO);
+
+    void registNoticeFile(FileDTO fileDTO);
+
     NoticeMemberFileDTO noticeDetail(int id);
-
-
-
-
 
     void editNotice(NoticeMemberFileDTO noticeMemberFileDTO);
 
     void deleteNotice(int id);
 
-    void registNoticeFile(FileDTO fileDTO);
+    void deleteNoticeFile(int id);
 }
