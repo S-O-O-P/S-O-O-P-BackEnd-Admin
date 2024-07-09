@@ -1,7 +1,7 @@
 package com.soop.pages.notice.controller;
 
 import com.soop.pages.notice.model.dto.FileDTO;
-import com.soop.pages.notice.model.dto.NoticeDTO;
+import com.soop.pages.notice.model.dto.NoticeMemberFileDTO;
 import com.soop.pages.notice.model.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -14,10 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
+import java.sql.Date;
 import java.util.*;
 
 @RestController
@@ -27,15 +25,12 @@ public class Notice {
     @Autowired
     private NoticeService noticeService;
 
-    NoticeDTO noticeDTO = new NoticeDTO();
-    FileDTO fileDTO = new FileDTO();
-
     @GetMapping("/")
-    public ResponseEntity<Map<String,Object>> getNoticeList() {
+    public ResponseEntity<Map<String, Object>> getNoticeList() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        List<NoticeDTO> noticeInfo = noticeService.getNoticeList();
+        List<NoticeMemberFileDTO> noticeInfo = noticeService.getNoticeList();
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("noticeInfo", noticeInfo);
         return new ResponseEntity<>(responseMap, headers, HttpStatus.OK);
@@ -46,76 +41,60 @@ public class Notice {
                                           @RequestParam("title") String title,
                                           @RequestParam("content") String content,
                                           @RequestParam("userCode") int userCode,
-                                          @RequestParam(value = "file", required = false) MultipartFile file) {
+                                          @RequestParam("file") MultipartFile file) {
 
-        Date now = new Date();
+        String root = System.getProperty("user.dir");
+        String filePath = root + "/src/main/resources/static/uploadImages";
+        File dir = new File(filePath);
 
-        noticeDTO.setCategory(category);
-        noticeDTO.setTitle(title);
-        noticeDTO.setContent(content);
-        noticeDTO.setUserCode(userCode);
-        noticeDTO.setRegDate(now);
-
-        noticeService.registNotice(noticeDTO);
-
-        if (file != null && !file.isEmpty()) {
-            String root = System.getProperty("user.dir");
-            String filePath = root + "/src/main/resources/static/uploadImages";
-            File dir = new File(filePath);
-
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-
-            String originFileName = file.getOriginalFilename();
-            String ext = originFileName.substring(originFileName.lastIndexOf("."));
-
-            String savedName = UUID.randomUUID() + ext;
-
-            try {
-                file.transferTo(new File(filePath + "/" + savedName));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            FileDTO fileDTO = new FileDTO();
-            fileDTO.setName(savedName);
-            fileDTO.setNoticeCode(noticeDTO.getNoticeCode());
-            noticeService.registNoticeFile(fileDTO);
+        if (!dir.exists()) {
+            dir.mkdirs();
         }
 
-        return ResponseEntity
-                .created(URI.create("new"))
-                .build();
+        String originFileName = file.getOriginalFilename();
+        String ext = originFileName != null ? originFileName.substring(originFileName.lastIndexOf(".")) : "";
+        String savedName = UUID.randomUUID() + ext;
+
+        try {
+            file.transferTo(new File(filePath + "/" + savedName));
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed");
+        }
+
+        NoticeMemberFileDTO noticeMemberFileDTO = new NoticeMemberFileDTO();
+        noticeMemberFileDTO.setCategory(category);
+        noticeMemberFileDTO.setTitle(title);
+        noticeMemberFileDTO.setContent(content);
+        noticeMemberFileDTO.setUserCode(userCode);
+        noticeMemberFileDTO.setRegDate(new Date(System.currentTimeMillis()));
+
+        // Create and set FileDTO
+        FileDTO fileDTO = new FileDTO();
+        fileDTO.setName(originFileName);
+        fileDTO.setNoticeCode(noticeMemberFileDTO.getNoticeCode());
+
+        noticeMemberFileDTO.setFileDTO(fileDTO);
+
+        noticeService.registNotice(noticeMemberFileDTO);
+        noticeService.registNoticeFile(fileDTO);
+
+        return ResponseEntity.created(URI.create("/notice/" + noticeMemberFileDTO.getNoticeCode())).build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> noticeDetail(@PathVariable("id") String id) {
-
+    public ResponseEntity<Map<String, Object>> noticeDetail(@PathVariable("id") int id) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-        int code = Integer.parseInt(id);
-
-        NoticeDTO noticeDTO1 = noticeService.noticeDetail(code);
-
-        FileDTO fileDTO1 = noticeService.noticeDetailFile(code);
+        NoticeMemberFileDTO noticeMemberFileDTO = noticeService.noticeDetail(id);
+        if (noticeMemberFileDTO == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
         Map<String, Object> result = new HashMap<>();
-
-        result.put("noticeDTO", noticeDTO1);
-        result.put("fileDTO", fileDTO1);
+        result.put("noticeFileDTO", noticeMemberFileDTO);
 
         return new ResponseEntity<>(result, headers, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/image", produces = MediaType.IMAGE_PNG_VALUE)
-    public byte[] image(@RequestParam String name) throws IOException {
-        String root = System.getProperty("user.dir");
-        String filePath = root + "/src/main/resources/static/uploadImages/";
-
-        Path imagePath = Paths.get(filePath, name);
-        return Files.readAllBytes(imagePath);
     }
 
     @PutMapping("/{id}")
@@ -124,17 +103,18 @@ public class Notice {
                                         @RequestParam("title") String title,
                                         @RequestParam("content") String content,
                                         @RequestParam("userCode") int userCode,
-                                        @RequestParam(value = "file", required = false )MultipartFile file) {
+                                        @RequestParam(value = "file", required = false) MultipartFile file) {
 
-        noticeDTO.setNoticeCode(id);
-        noticeDTO.setCategory(category);
-        noticeDTO.setTitle(title);
-        noticeDTO.setContent(content);
-        noticeDTO.setUserCode(userCode);
-        noticeService.editNotice(noticeDTO);
+        NoticeMemberFileDTO noticeMemberFileDTO = new NoticeMemberFileDTO();
+        noticeMemberFileDTO.setNoticeCode(id);
+        noticeMemberFileDTO.setCategory(category);
+        noticeMemberFileDTO.setTitle(title);
+        noticeMemberFileDTO.setContent(content);
+        noticeMemberFileDTO.setUserCode(userCode);
+        noticeMemberFileDTO.setRegDate(new Date(System.currentTimeMillis())); // Set the current date
 
+        // Handle file upload if a file is provided
         if (file != null && !file.isEmpty()) {
-
             String root = System.getProperty("user.dir");
             String filePath = root + "/src/main/resources/static/uploadImages";
             File dir = new File(filePath);
@@ -144,49 +124,34 @@ public class Notice {
             }
 
             String originFileName = file.getOriginalFilename();
-            String ext = originFileName.substring(originFileName.lastIndexOf("."));
-
+            String ext = originFileName != null ? originFileName.substring(originFileName.lastIndexOf(".")) : "";
             String savedName = UUID.randomUUID() + ext;
 
             try {
                 file.transferTo(new File(filePath + "/" + savedName));
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed");
             }
 
+            // Create and set FileDTO
             FileDTO fileDTO = new FileDTO();
-            fileDTO.setName(savedName);
-            fileDTO.setNoticeCode(noticeDTO.getNoticeCode());
-            noticeService.editNoticeFile(fileDTO);
+            fileDTO.setName(originFileName);
+            fileDTO.setNoticeCode(id); // Use the existing notice code
+
+            noticeMemberFileDTO.setFileDTO(fileDTO);
+
+            // Update the file information in the service
+            noticeService.registNoticeFile(fileDTO);
         }
 
-        return ResponseEntity
-                .created(URI.create("/notice/" + id))
-                .build();
-    }
+        noticeService.editNotice(noticeMemberFileDTO);
 
+        return ResponseEntity.ok().build();
+    }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteNotice(@PathVariable("id") int id, @RequestBody(required = false) Map<String, String> payload) {
-        if (payload != null && payload.containsKey("fileName")) {
-            String fileName = payload.get("fileName");
-            String filePath = "src/main/resources/static/uploadImages/" + fileName;
-
-            File fileToDelete = new File(filePath);
-            if (fileToDelete.exists()) {
-                if (fileToDelete.delete()) {
-                    System.out.println("파일 삭제 성공");
-                } else {
-                    System.out.println("파일 삭제 실패");
-                }
-            } else {
-                System.out.println("파일 없음");
-            }
-        }
-
+    public ResponseEntity<?> delete(@PathVariable("id") int id) {
         noticeService.deleteNotice(id);
-
         return ResponseEntity.noContent().build();
     }
-    
 }

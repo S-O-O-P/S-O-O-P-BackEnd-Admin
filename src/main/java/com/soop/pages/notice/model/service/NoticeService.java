@@ -2,7 +2,7 @@ package com.soop.pages.notice.model.service;
 
 import com.soop.pages.notice.model.dao.NoticeMapper;
 import com.soop.pages.notice.model.dto.FileDTO;
-import com.soop.pages.notice.model.dto.NoticeDTO;
+import com.soop.pages.notice.model.dto.NoticeMemberFileDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,31 +15,35 @@ public class NoticeService {
     private NoticeMapper noticeMapper;
     private FileDTO fileDTO;
 
-    public void registNotice(NoticeDTO noticeMemberFileDTO) {
+    public void registNotice(NoticeMemberFileDTO noticeMemberFileDTO) {
 
         noticeMapper.registNotice(noticeMemberFileDTO);
 
         noticeMemberFileDTO.setNoticeCode(noticeMemberFileDTO.getNoticeCode());
 
+        System.out.println(" service 쪽");
+
     }
 
-    public List<NoticeDTO> getNoticeList() {
+    public List<NoticeMemberFileDTO> getNoticeList() {
         return noticeMapper.getNoticeList();
     }
 
-    public NoticeDTO noticeDetail(int id) {
+    public NoticeMemberFileDTO noticeDetail(int id) {
 
         return noticeMapper.noticeDetail(id);
     }
 
-    public FileDTO noticeDetailFile(int id) {
-
-        return noticeMapper.noticeDetailFile(id);
-    }
-
-    public void editNotice(NoticeDTO noticeMemberFileDTO) {
+    public void editNotice(NoticeMemberFileDTO noticeMemberFileDTO) {
 
         noticeMapper.editNotice(noticeMemberFileDTO);
+    }
+
+
+
+
+    public void deleteNotice(int id) {
+        noticeMapper.deleteNotice(id);
     }
 
     public void registNoticeFile(FileDTO fileDTO) {
@@ -47,18 +51,4 @@ public class NoticeService {
         noticeMapper.registNoticeFile(fileDTO);
     }
 
-    public void deleteNotice(int id) {
-
-        noticeMapper.deleteNoticeFile(id);
-
-        noticeMapper.deleteNotice(id);
-
-    }
-
-    public void editNoticeFile(FileDTO fileDTO) {
-
-        noticeMapper.registNoticeFile(fileDTO);
-
-        fileDTO.setNoticeCode(fileDTO.getNoticeCode());
-    }
 }
