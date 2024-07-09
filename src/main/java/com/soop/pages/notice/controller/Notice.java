@@ -15,6 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 @RestController
@@ -43,26 +46,7 @@ public class Notice {
                                           @RequestParam("title") String title,
                                           @RequestParam("content") String content,
                                           @RequestParam("userCode") int userCode,
-                                          @RequestParam("file") MultipartFile file) {
-
-        String root = System.getProperty("user.dir");
-        String filePath = root + "/src/main/resources/static/uploadImages";
-        File dir = new File(filePath);
-
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-
-        String originFileName = file.getOriginalFilename();
-        String ext = originFileName.substring(originFileName.lastIndexOf("."));
-
-        String savedName = UUID.randomUUID() + ext;
-
-        try {
-            file.transferTo(new File(filePath + "/" + savedName));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+                                          @RequestParam(value = "file", required = false) MultipartFile file) {
 
         Date now = new Date();
 
@@ -74,11 +58,31 @@ public class Notice {
 
         noticeService.registNotice(noticeDTO);
 
-        fileDTO.setName(savedName);
+        if (file != null && !file.isEmpty()) {
+            String root = System.getProperty("user.dir");
+            String filePath = root + "/src/main/resources/static/uploadImages";
+            File dir = new File(filePath);
 
-        fileDTO.setNoticeCode(noticeDTO.getNoticeCode());
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
 
-        noticeService.registNoticeFile(fileDTO);
+            String originFileName = file.getOriginalFilename();
+            String ext = originFileName.substring(originFileName.lastIndexOf("."));
+
+            String savedName = UUID.randomUUID() + ext;
+
+            try {
+                file.transferTo(new File(filePath + "/" + savedName));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            FileDTO fileDTO = new FileDTO();
+            fileDTO.setName(savedName);
+            fileDTO.setNoticeCode(noticeDTO.getNoticeCode());
+            noticeService.registNoticeFile(fileDTO);
+        }
 
         return ResponseEntity
                 .created(URI.create("new"))
@@ -110,45 +114,79 @@ public class Notice {
         String root = System.getProperty("user.dir");
         String filePath = root + "/src/main/resources/static/uploadImages/";
 
-        return getClass().getResourceAsStream(filePath + name).readAllBytes();
+        Path imagePath = Paths.get(filePath, name);
+        return Files.readAllBytes(imagePath);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editNotice(@PathVariable("id") int id, @RequestBody NoticeDTO noticeDTO1, @RequestParam String fileName) {
+    public ResponseEntity<?> editNotice(@PathVariable("id") int id,
+                                        @RequestParam("category") String category,
+                                        @RequestParam("title") String title,
+                                        @RequestParam("content") String content,
+                                        @RequestParam("userCode") int userCode,
+                                        @RequestParam(value = "file", required = false )MultipartFile file) {
 
-        noticeDTO1.setNoticeCode(id);
+        noticeDTO.setNoticeCode(id);
+        noticeDTO.setCategory(category);
+        noticeDTO.setTitle(title);
+        noticeDTO.setContent(content);
+        noticeDTO.setUserCode(userCode);
         noticeService.editNotice(noticeDTO);
+
+        if (file != null && !file.isEmpty()) {
+
+            String root = System.getProperty("user.dir");
+            String filePath = root + "/src/main/resources/static/uploadImages";
+            File dir = new File(filePath);
+
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            String originFileName = file.getOriginalFilename();
+            String ext = originFileName.substring(originFileName.lastIndexOf("."));
+
+            String savedName = UUID.randomUUID() + ext;
+
+            try {
+                file.transferTo(new File(filePath + "/" + savedName));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            FileDTO fileDTO = new FileDTO();
+            fileDTO.setName(savedName);
+            fileDTO.setNoticeCode(noticeDTO.getNoticeCode());
+            noticeService.editNoticeFile(fileDTO);
+        }
 
         return ResponseEntity
                 .created(URI.create("/notice/" + id))
                 .build();
     }
 
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") int id, @RequestBody String fileName) {
+    public ResponseEntity<?> deleteNotice(@PathVariable("id") int id, @RequestBody(required = false) Map<String, String> payload) {
+        if (payload != null && payload.containsKey("fileName")) {
+            String fileName = payload.get("fileName");
+            String filePath = "src/main/resources/static/uploadImages/" + fileName;
 
-//        String fileName = fileDTO.getName();
-//        System.out.println("fileDTO = " + fileDTO.getName());
-
-//        System.out.println("fileName = " + fileName.getName());
-        System.out.println("fileName = " + fileName);
-
-        String file = "src/main/resources/static/uploadImages/" + fileName;
-
-        File fileDelete = new File(file);
-        if(fileDelete.delete()) {
-            // 파일을 삭제합니다.
-            System.out.println("파일 삭제 성공");
-
-        } else {
-            System.out.println("파일 삭제 실패");
+            File fileToDelete = new File(filePath);
+            if (fileToDelete.exists()) {
+                if (fileToDelete.delete()) {
+                    System.out.println("파일 삭제 성공");
+                } else {
+                    System.out.println("파일 삭제 실패");
+                }
+            } else {
+                System.out.println("파일 없음");
+            }
         }
 
         noticeService.deleteNotice(id);
 
-        return ResponseEntity
-                .noContent()
-                .build();
+        return ResponseEntity.noContent().build();
     }
-
+    
 }
