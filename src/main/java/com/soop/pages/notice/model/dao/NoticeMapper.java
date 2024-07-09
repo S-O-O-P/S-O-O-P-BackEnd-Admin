@@ -18,6 +18,5 @@ public interface NoticeMapper {
 
     void deleteNotice(int id);
 
-//    파일 등록
-    void fileRegist(FileDTO fileDTO);
+    void registNoticeFile(FileDTO fileDTO);
 }
