@@ -29,7 +29,7 @@ public class NoticeService {
         return noticeMapper.getNoticeList();
     }
 
-    public NoticeMemberFileDTO noticeDetail(String id) {
+    public NoticeMemberFileDTO noticeDetail(int id) {
 
         return noticeMapper.noticeDetail(id);
     }
@@ -38,6 +38,9 @@ public class NoticeService {
 
         noticeMapper.editNotice(noticeMemberFileDTO);
     }
+
+
+
 
     public void deleteNotice(int id) {
         noticeMapper.deleteNotice(id);

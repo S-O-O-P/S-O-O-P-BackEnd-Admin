@@ -12,7 +12,11 @@ public interface NoticeMapper {
 
     List<NoticeMemberFileDTO> getNoticeList();
 
-    NoticeMemberFileDTO noticeDetail(String id);
+    NoticeMemberFileDTO noticeDetail(int id);
+
+
+
+
 
     void editNotice(NoticeMemberFileDTO noticeMemberFileDTO);
 
