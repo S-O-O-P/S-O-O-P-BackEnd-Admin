@@ -5,6 +5,7 @@ import com.soop.pages.notice.model.dto.FileDTO;
 import com.soop.pages.notice.model.dto.NoticeMemberFileDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,5 +37,10 @@ public class NoticeService {
 
     public void deleteNotice(int id) {
         noticeMapper.deleteNotice(id);
+    }
+
+    @Transactional
+    public void deleteNoticeFile(int noticeCode) {
+        noticeMapper.deleteNoticeFile(noticeCode);
     }
 }

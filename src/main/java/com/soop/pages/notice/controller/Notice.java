@@ -157,25 +157,34 @@ public class Notice {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity<?> deleteNotice(@PathVariable("id") int id, @RequestBody(required = false) Map<String, String> payload) {
-        if (payload != null && payload.containsKey("fileName")) {
-            String fileName = payload.get("fileName");
+    public ResponseEntity<?> deleteNotice(@PathVariable("id") int id) {
+        // 공지사항에 연결된 파일 정보를 가져오기
+        NoticeMemberFileDTO noticeMemberFileDTO = noticeService.noticeDetail(id);
+        if (noticeMemberFileDTO == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Notice not found");
+        }
+
+        FileDTO fileDTO = noticeMemberFileDTO.getFileDTO();
+        if (fileDTO != null) {
+            String fileName = fileDTO.getName();
             String filePath = "src/main/resources/static/uploadImages/" + fileName;
 
             File fileToDelete = new File(filePath);
             if (fileToDelete.exists()) {
-                if (fileToDelete.delete()) {
-                    System.out.println("파일 삭제 성공");
-                } else {
+                if (!fileToDelete.delete()) {
                     System.out.println("파일 삭제 실패");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete file");
                 }
-            } else {
-                System.out.println("파일 없음");
             }
         }
 
+        // 데이터베이스에서 파일 레코드 삭제
+        noticeService.deleteNoticeFile(id);
+
+        // 데이터베이스에서 공지사항 레코드 삭제
         noticeService.deleteNotice(id);
 
         return ResponseEntity.noContent().build();
     }
+
 }

@@ -97,6 +97,6 @@
     </delete>
 
     <delete id="deleteNoticeFile" parameterType="int">
-        DELETE FROM ATTACHED_FILE WHERE NOTICE_CODE = #{id}
+        DELETE FROM ATTACHED_FILE WHERE NOTICE_CODE = #{noticeCode}
     </delete>
 </mapper>
