@@ -14,7 +14,7 @@ public interface NoticeMapper {
 
     NoticeDTO noticeDetail(int id);
 
-    void editNotice(NoticeDTO noticeMemberFileDTO);
+    void editNotice(NoticeDTO noticeDTO);
 
     void registNoticeFile(FileDTO fileDTO);
 
@@ -22,5 +22,7 @@ public interface NoticeMapper {
 
     void deleteNotice(int id);
     void deleteNoticeFile(int id);
+
+    void editNoticeFile(FileDTO fileDTO);
 
 }

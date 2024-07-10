@@ -64,6 +64,13 @@
         )
     </insert>
 
+    <update id="editNoticeFile" parameterType="com.soop.pages.notice.model.dto.FileDTO">
+        UPDATE ATTACHED_FILE
+        SET
+        NAME = #{name},
+        NOTICE_CODE = #{noticeCode}
+    </update>
+
     <select id="noticeDetail" resultMap="NoticeResultMap" parameterType="_int">
         SELECT
         NOTICE_CODE,
@@ -104,5 +111,4 @@
         ATTACHED_FILE
         WHERE NOTICE_CODE = #{id}
     </delete>
-
 </mapper>

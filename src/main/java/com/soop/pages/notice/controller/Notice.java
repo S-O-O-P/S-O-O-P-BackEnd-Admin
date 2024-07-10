@@ -115,6 +115,8 @@ public class Notice {
         String filePath = root + "/src/main/resources/static/uploadImages/";
 
         Path imagePath = Paths.get(filePath, name);
+
+        System.out.println("imagePath = " + imagePath);
         return Files.readAllBytes(imagePath);
     }
 
@@ -124,8 +126,9 @@ public class Notice {
                                         @RequestParam("title") String title,
                                         @RequestParam("content") String content,
                                         @RequestParam("userCode") int userCode,
-                                        @RequestParam(value = "file", required = false )MultipartFile file) {
+                                        @RequestParam(value = "file", required = false) MultipartFile file) {
 
+        NoticeDTO noticeDTO = new NoticeDTO();
         noticeDTO.setNoticeCode(id);
         noticeDTO.setCategory(category);
         noticeDTO.setTitle(title);
@@ -133,7 +136,21 @@ public class Notice {
         noticeDTO.setUserCode(userCode);
         noticeService.editNotice(noticeDTO);
 
-        if (file != null && !file.isEmpty()) {
+        FileDTO fileDTO1 = new FileDTO();
+        System.out.println("fileDTO1 getName 출력입니다. = " + fileDTO1.getName());
+
+        if (file != null) {
+
+            FileDTO existingFile = noticeService.noticeDetailFile(id);
+            if (existingFile != null) {
+                String filePath = "src/main/resources/static/uploadImages/" + existingFile.getName();
+                File fileToDelete = new File(filePath);
+                if (fileToDelete.exists() && fileToDelete.delete()) {
+                    System.out.println("기존 파일 삭제 성공");
+                } else {
+                    System.out.println("기존 파일 삭제 실패");
+                }
+            }
 
             String root = System.getProperty("user.dir");
             String filePath = root + "/src/main/resources/static/uploadImages";
@@ -145,7 +162,6 @@ public class Notice {
 
             String originFileName = file.getOriginalFilename();
             String ext = originFileName.substring(originFileName.lastIndexOf("."));
-
             String savedName = UUID.randomUUID() + ext;
 
             try {
@@ -158,6 +174,8 @@ public class Notice {
             fileDTO.setName(savedName);
             fileDTO.setNoticeCode(noticeDTO.getNoticeCode());
             noticeService.editNoticeFile(fileDTO);
+        } else {
+            noticeService.deleteNoticeFile(id);
         }
 
         return ResponseEntity
@@ -168,6 +186,7 @@ public class Notice {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteNotice(@PathVariable("id") int id, @RequestBody(required = false) Map<String, String> payload) {
+
         if (payload != null && payload.containsKey("fileName")) {
             String fileName = payload.get("fileName");
             String filePath = "src/main/resources/static/uploadImages/" + fileName;

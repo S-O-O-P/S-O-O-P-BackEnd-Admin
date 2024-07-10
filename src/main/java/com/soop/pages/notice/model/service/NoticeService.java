@@ -57,8 +57,10 @@ public class NoticeService {
 
     public void editNoticeFile(FileDTO fileDTO) {
 
-        noticeMapper.registNoticeFile(fileDTO);
+        noticeMapper.editNoticeFile(fileDTO);
+    }
 
-        fileDTO.setNoticeCode(fileDTO.getNoticeCode());
+    public void deleteNoticeFile(int id) {
+        noticeMapper.deleteNoticeFile(id);
     }
 }
