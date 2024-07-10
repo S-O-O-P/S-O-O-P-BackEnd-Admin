@@ -21,4 +21,5 @@ public class NoticeMemberFileDTO {
     private FileDTO fileDTO;
     private MemberDTO memberDTO;
 
+
 }

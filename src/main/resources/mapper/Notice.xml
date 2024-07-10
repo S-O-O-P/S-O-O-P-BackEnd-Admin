@@ -4,18 +4,13 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.soop.pages.notice.model.dao.NoticeMapper">
-    <resultMap id="NoticeResultMap" type="com.soop.pages.notice.model.dto.NoticeMemberFileDTO">
+    <resultMap id="NoticeResultMap" type="com.soop.pages.notice.model.dto.NoticeDTO">
         <id property="noticeCode" column="NOTICE_CODE"/>
         <result property="category" column="CATEGORY"/>
         <result property="title" column="TITLE"/>
         <result property="content" column="CONTENT"/>
         <result property="userCode" column="USER_CODE"/>
         <result property="regDate" column="REG_DATE"/>
-        <association property="fileDTO" javaType="com.soop.pages.notice.model.dto.FileDTO">
-            <id property="fileCode" column="FILE_CODE"/>
-            <result property="name" column="NAME"/>
-            <result property="noticeCode" column="NOTICE_CODE"/>
-        </association>
     </resultMap>
 
     <resultMap id="fileResultMap" type="com.soop.pages.notice.model.dto.FileDTO">
@@ -24,6 +19,8 @@
         <result property="noticeCode" column="NOTICE_CODE"/>
     </resultMap>
 
+
+
     <select id="getNoticeList" resultMap="NoticeResultMap">
         SELECT
         NOTICE_CODE,
@@ -31,9 +28,10 @@
         REG_DATE,
         USER_CODE
         FROM NOTICE
+        ORDER BY NOTICE_CODE DESC;
     </select>
 
-    <insert id="registNotice" parameterType="com.soop.pages.notice.model.dto.NoticeMemberFileDTO" useGeneratedKeys="true" keyProperty="noticeCode">
+    <insert id="registNotice" parameterType="com.soop.pages.notice.model.dto.NoticeDTO" useGeneratedKeys="true" keyProperty="noticeCode">
         INSERT INTO NOTICE
         (
         CATEGORY,
@@ -52,7 +50,7 @@
         )
     </insert>
 
-    <!-- 파일 등록 -->
+    <!--    파일 등록 -->
     <insert id="registNoticeFile" parameterType="com.soop.pages.notice.model.dto.FileDTO">
         INSERT INTO ATTACHED_FILE
         (
@@ -66,37 +64,45 @@
         )
     </insert>
 
-    <select id="noticeDetail" resultMap="NoticeResultMap" parameterType="int">
+    <select id="noticeDetail" resultMap="NoticeResultMap" parameterType="_int">
         SELECT
-        A.NOTICE_CODE,
-        A.CATEGORY,
-        A.TITLE,
-        A.CONTENT,
-        A.USER_CODE,
-        A.REG_DATE,
-        B.FILE_CODE,
-        B.NAME,
-        B.NOTICE_CODE
-        FROM NOTICE A
-        LEFT JOIN ATTACHED_FILE B ON A.NOTICE_CODE = B.NOTICE_CODE
-        WHERE A.NOTICE_CODE = #{id}
+        NOTICE_CODE,
+        CATEGORY,
+        TITLE,
+        CONTENT,
+        USER_CODE,
+        REG_DATE
+        FROM NOTICE
+        WHERE NOTICE_CODE = #{id};
     </select>
 
-    <update id="editNotice" parameterType="com.soop.pages.notice.model.dto.NoticeMemberFileDTO">
+    <select id="noticeDetailFile" parameterType="_int" resultMap="fileResultMap">
+        SELECT
+        NOTICE_CODE,
+        NAME,
+        FILE_CODE
+        FROM ATTACHED_FILE
+        WHERE NOTICE_CODE = #{id}
+    </select>
+
+    <update id="editNotice" parameterType="com.soop.pages.notice.model.dto.NoticeDTO">
         UPDATE NOTICE
-        SET CATEGORY = #{category},
+        SET
+        CATEGORY = #{category},
         TITLE = #{title},
-        CONTENT = #{content},
-        USER_CODE = #{userCode},
-        REG_DATE = #{regDate}
-        WHERE NOTICE_CODE = #{noticeCode}
+        CONTENT = #{content}
+        WHERE NOTICE_CODE = #{noticeCode};
     </update>
 
-    <delete id="deleteNotice" parameterType="int">
-        DELETE FROM NOTICE WHERE NOTICE_CODE = #{id}
+    <delete id="deleteNotice" parameterType="_int">
+        DELETE FROM
+        NOTICE
+        WHERE NOTICE_CODE = #{id}
+    </delete>
+    <delete id="deleteNoticeFile" parameterType="_int">
+        DELETE FROM
+        ATTACHED_FILE
+        WHERE NOTICE_CODE = #{id}
     </delete>
 
-    <delete id="deleteNoticeFile" parameterType="int">
-        DELETE FROM ATTACHED_FILE WHERE NOTICE_CODE = #{noticeCode}
-    </delete>
 </mapper>

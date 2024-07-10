@@ -2,10 +2,9 @@ package com.soop.pages.notice.model.service;
 
 import com.soop.pages.notice.model.dao.NoticeMapper;
 import com.soop.pages.notice.model.dto.FileDTO;
-import com.soop.pages.notice.model.dto.NoticeMemberFileDTO;
+import com.soop.pages.notice.model.dto.NoticeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,33 +13,52 @@ public class NoticeService {
 
     @Autowired
     private NoticeMapper noticeMapper;
+    private FileDTO fileDTO;
 
-    public List<NoticeMemberFileDTO> getNoticeList() {
+    public void registNotice(NoticeDTO noticeMemberFileDTO) {
+
+        noticeMapper.registNotice(noticeMemberFileDTO);
+
+        noticeMemberFileDTO.setNoticeCode(noticeMemberFileDTO.getNoticeCode());
+
+    }
+
+    public List<NoticeDTO> getNoticeList() {
         return noticeMapper.getNoticeList();
     }
 
-    public void registNotice(NoticeMemberFileDTO noticeMemberFileDTO) {
-        noticeMapper.registNotice(noticeMemberFileDTO);
-    }
+    public NoticeDTO noticeDetail(int id) {
 
-    public void registNoticeFile(FileDTO fileDTO) {
-        noticeMapper.registNoticeFile(fileDTO);
-    }
-
-    public NoticeMemberFileDTO noticeDetail(int id) {
         return noticeMapper.noticeDetail(id);
     }
 
-    public void editNotice(NoticeMemberFileDTO noticeMemberFileDTO) {
+    public FileDTO noticeDetailFile(int id) {
+
+        return noticeMapper.noticeDetailFile(id);
+    }
+
+    public void editNotice(NoticeDTO noticeMemberFileDTO) {
+
         noticeMapper.editNotice(noticeMemberFileDTO);
     }
 
-    public void deleteNotice(int id) {
-        noticeMapper.deleteNotice(id);
+    public void registNoticeFile(FileDTO fileDTO) {
+
+        noticeMapper.registNoticeFile(fileDTO);
     }
 
-    @Transactional
-    public void deleteNoticeFile(int noticeCode) {
-        noticeMapper.deleteNoticeFile(noticeCode);
+    public void deleteNotice(int id) {
+
+        noticeMapper.deleteNoticeFile(id);
+
+        noticeMapper.deleteNotice(id);
+
+    }
+
+    public void editNoticeFile(FileDTO fileDTO) {
+
+        noticeMapper.registNoticeFile(fileDTO);
+
+        fileDTO.setNoticeCode(fileDTO.getNoticeCode());
     }
 }
