@@ -25,7 +25,7 @@ public class LoginController {
         LoginAndLinkBeeUserDTO loginDTO = loginService.login(id, password);
 
         Map<String, Object> response = new HashMap<>();
-        if (loginDTO != null && "ADMIN".equals(loginDTO.getUserRole().getUserRole())) {
+        if (loginDTO != null && "ROLE_ADMIN".equals(loginDTO.getUserRole().getUserRole())) {
             response.put("id", loginDTO.getId());
             response.put("nickname", loginDTO.getUserRole().getNickname());
             response.put("userRole", loginDTO.getUserRole().getUserRole());
