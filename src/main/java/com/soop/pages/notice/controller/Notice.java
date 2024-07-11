@@ -31,7 +31,7 @@ public class Notice {
     FileDTO fileDTO = new FileDTO();
 
     @GetMapping("/")
-    public ResponseEntity<Map<String,Object>> getNoticeList() {
+    public ResponseEntity<Map<String, Object>> getNoticeList() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
@@ -56,9 +56,15 @@ public class Notice {
         noticeDTO.setUserCode(userCode);
         noticeDTO.setRegDate(now);
 
+        System.out.println("category = " + category);
+        System.out.println("title = " + title);
+        System.out.println("content = " + content);
+        System.out.println("userCode = " + userCode);
+        System.out.println("file = " + file);
+
         noticeService.registNotice(noticeDTO);
 
-        if (file != null && !file.isEmpty()) {
+        if (file != null) {
             String root = System.getProperty("user.dir");
             String filePath = root + "/src/main/resources/static/uploadImages";
             File dir = new File(filePath);
@@ -109,12 +115,13 @@ public class Notice {
         return new ResponseEntity<>(result, headers, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/image", produces = MediaType.IMAGE_PNG_VALUE)
+    @GetMapping(value = "/image", produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE})
     public byte[] image(@RequestParam String name) throws IOException {
         String root = System.getProperty("user.dir");
         String filePath = root + "/src/main/resources/static/uploadImages/";
 
         Path imagePath = Paths.get(filePath, name);
+
         return Files.readAllBytes(imagePath);
     }
 
@@ -124,8 +131,9 @@ public class Notice {
                                         @RequestParam("title") String title,
                                         @RequestParam("content") String content,
                                         @RequestParam("userCode") int userCode,
-                                        @RequestParam(value = "file", required = false )MultipartFile file) {
+                                        @RequestParam(value = "file", required = false) MultipartFile file) {
 
+        NoticeDTO noticeDTO = new NoticeDTO();
         noticeDTO.setNoticeCode(id);
         noticeDTO.setCategory(category);
         noticeDTO.setTitle(title);
@@ -133,10 +141,12 @@ public class Notice {
         noticeDTO.setUserCode(userCode);
         noticeService.editNotice(noticeDTO);
 
-        if (file != null && !file.isEmpty()) {
+        FileDTO existingFile = noticeService.noticeDetailFile(id);
+        String root = System.getProperty("user.dir");
+        String filePath = root + "/src/main/resources/static/uploadImages";
 
-            String root = System.getProperty("user.dir");
-            String filePath = root + "/src/main/resources/static/uploadImages";
+        if (file != null) {
+
             File dir = new File(filePath);
 
             if (!dir.exists()) {
@@ -157,7 +167,19 @@ public class Notice {
             FileDTO fileDTO = new FileDTO();
             fileDTO.setName(savedName);
             fileDTO.setNoticeCode(noticeDTO.getNoticeCode());
-            noticeService.editNoticeFile(fileDTO);
+            noticeService.registNoticeFile(fileDTO);
+
+        } else {
+            if (existingFile != null) {
+                String existingFilePath = filePath + "/" + existingFile.getName();
+                File fileToDelete = new File(existingFilePath);
+                if (fileToDelete.exists() && fileToDelete.delete()) {
+                    System.out.println("기존 파일 삭제 성공");
+                } else {
+                    System.out.println("기존 파일 삭제 실패");
+                }
+                noticeService.deleteNoticeFile(id);
+            }
         }
 
         return ResponseEntity
@@ -166,8 +188,11 @@ public class Notice {
     }
 
 
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteNotice(@PathVariable("id") int id, @RequestBody(required = false) Map<String, String> payload) {
+
         if (payload != null && payload.containsKey("fileName")) {
             String fileName = payload.get("fileName");
             String filePath = "src/main/resources/static/uploadImages/" + fileName;
