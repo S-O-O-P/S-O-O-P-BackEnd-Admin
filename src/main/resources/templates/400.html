@@ -1,10 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>400 - Bad Request</title>
+    <link rel="stylesheet" type="text/css" href="/css/Commons.css">
 </head>
 <body>
+<div class="container">
+    <img src="/img/logo.png" alt="400 Error">
+    <p>요청이 잘못되었습니다. 다시 시도해 주세요.</p>
+    <button onclick="goBack()">이전으로</button>
+</div>
 
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 </body>
 </html>

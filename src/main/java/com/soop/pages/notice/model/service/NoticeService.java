@@ -13,6 +13,10 @@ public class NoticeService {
 
     @Autowired
     private NoticeMapper noticeMapper;
+
+    public NoticeService(NoticeMapper noticeMapper) {
+        this.noticeMapper = noticeMapper;
+    }
     private FileDTO fileDTO;
 
     public void registNotice(NoticeDTO noticeMemberFileDTO) {
@@ -24,7 +28,15 @@ public class NoticeService {
     }
 
     public List<NoticeDTO> getNoticeList() {
-        return noticeMapper.getNoticeList();
+        List<NoticeDTO> noticeList = noticeMapper.getNoticeList();
+
+        // Assign display order
+        int displayOrder = noticeList.size();
+        for (NoticeDTO notice : noticeList) {
+            notice.setDisplayOrder(displayOrder--);
+        }
+
+        return noticeList;
     }
 
     public NoticeDTO noticeDetail(int id) {

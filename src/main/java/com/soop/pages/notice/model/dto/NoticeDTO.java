@@ -17,4 +17,5 @@ public class NoticeDTO {
     private String content;
     private int userCode;
     private Date regDate;
+    private int displayOrder;
 }

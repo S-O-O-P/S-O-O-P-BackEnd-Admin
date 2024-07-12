@@ -24,6 +24,8 @@ public class CustomErrorController implements ErrorController {
                 return "403";
             } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
                 return "500";
+            } else if (statusCode == HttpStatus.BAD_REQUEST.value()) {
+                return "400";
             }
         }
         return "error";

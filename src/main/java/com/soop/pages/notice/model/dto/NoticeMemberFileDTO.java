@@ -17,7 +17,6 @@ public class NoticeMemberFileDTO {
     private String content;
     private int userCode;
     private Date regDate;
-
     private FileDTO fileDTO;
     private MemberDTO memberDTO;
 
