@@ -9,9 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.*;
@@ -87,57 +85,6 @@ public class Notice {
         return new ResponseEntity<>(result, headers, HttpStatus.OK);
     }
 
-//    @GetMapping(value = "/image", produces = {MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE})
-//    public byte[] image(@RequestParam String name) throws IOException {
-//        String root = System.getProperty("user.dir");
-//        String filePath = root + "/src/main/resources/static/uploadImages/";
-//
-//        Path imagePath = Paths.get(filePath, name);
-//
-//        return Files.readAllBytes(imagePath);
-//    }
-
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> editNotice(@PathVariable("id") int id,
-//                                        @RequestParam("category") String category,
-//                                        @RequestParam("title") String title,
-//                                        @RequestParam("content") String content,
-//                                        @RequestParam("userCode") int userCode,
-//                                        @RequestParam(value = "file", required = false) MultipartFile file) {
-//
-//        NoticeDTO noticeDTO = new NoticeDTO();
-//        noticeDTO.setNoticeCode(id);
-//        noticeDTO.setCategory(category);
-//        noticeDTO.setTitle(title);
-//        noticeDTO.setContent(content);
-//        noticeDTO.setUserCode(userCode);
-//
-//        noticeService.editNotice(noticeDTO);
-//
-//        FileDTO existingFile = noticeService.noticeDetailFile(id);
-//
-//        if (file != null) {
-//
-//            String originFileName = file.getOriginalFilename();
-//            String ext = originFileName.substring(originFileName.lastIndexOf("."));
-//
-//            String savedName = UUID.randomUUID() + ext;
-//
-//            FileDTO fileDTO = new FileDTO();
-//            fileDTO.setName(savedName);
-//            fileDTO.setNoticeCode(noticeDTO.getNoticeCode());
-//            noticeService.registNoticeFile(fileDTO);
-//
-//        } else {
-//            noticeService.deleteNoticeFile(id);
-//
-//        }
-//
-//        return ResponseEntity
-//                .created(URI.create("/notice/" + id))
-//                .build();
-//    }
-
     @PutMapping("/{id}")
     public ResponseEntity<?> editNotice(@PathVariable("id") int id,
                                         @RequestParam("category") String category,
@@ -155,9 +102,7 @@ public class Notice {
 
         noticeService.editNotice(noticeDTO);
 
-        // 파일 업로드 여부 확인 및 처리
         if (fileURL != null && !fileURL.isEmpty()) {
-            // 파일이 업로드된 경우
             try {
                 fileDTO.setName(fileURL);
                 fileDTO.setNoticeCode(id);
