@@ -1,5 +1,6 @@
 package com.soop.pages.notice.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.util.Date;
@@ -16,6 +17,8 @@ public class NoticeDTO {
     private String title;
     private String content;
     private int userCode;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date regDate;
     private int displayOrder;
 }
