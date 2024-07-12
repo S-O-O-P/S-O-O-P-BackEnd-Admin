@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +9,14 @@
 <div class="container">
     <img src="/img/logo.png" alt="500 Error">
     <p>서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해 주세요</p>
+    <button onclick="goBack()">이전으로</button>
 </div>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
 </body>
 </html>

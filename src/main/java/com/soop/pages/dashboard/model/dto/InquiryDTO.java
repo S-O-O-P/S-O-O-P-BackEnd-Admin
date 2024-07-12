@@ -20,4 +20,5 @@ public class InquiryDTO {
     private String answerStatus;
     private String answer;
     private Date answerDate;
+    private int displayOrder;
 }

@@ -24,3 +24,14 @@ img {
     width: 200px;
     height: auto;
 }
+
+button {
+    background-color: #FFB755;
+    color: white;
+    border: #FFB755;
+    border-radius: 20px;
+    width: 90px;
+    height: 48px;
+    font-size: 16px;
+    cursor: pointer;
+}

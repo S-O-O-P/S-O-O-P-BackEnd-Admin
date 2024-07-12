@@ -23,13 +23,14 @@
 
     <select id="getHoneypotList" resultMap="HoneypotDTOResultMaps">
         SELECT
-            HONEYPOT_CODE,
+
             HONEYPOT_TITLE,
             REG_DATE,
             VISIBILITY_STATUS,
             REPORT_COUNT
         FROM
             HONEYPOT
+        ORDER BY REG_DATE DESC
     </select>
 
 

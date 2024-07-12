@@ -159,7 +159,7 @@
             HONEYPOT
         WHERE
             COALESCE(REPORT_COUNT, 0) > 0
-        ORDER BY REPORT_COUNT DESC
+        ORDER BY REG_DATE DESC
     </select>
 
     <!-- 1:1 문의 내역 조회 -->
@@ -171,6 +171,7 @@
             ANSWER_STATUS
         FROM
             INQUIRY
+        ORDER BY INQUIRY_DATE DESC
     </select>
 
     <!-- 최신 공지 사항 조회 -->
@@ -181,8 +182,7 @@
             REG_DATE
         FROM
             NOTICE
-        ORDER BY REG_DATE DESC, NOTICE_CODE DESC
-        LIMIT 5
+        ORDER BY REG_DATE DESC
     </select>
 
 

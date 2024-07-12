@@ -27,6 +27,7 @@
             INQUIRY_DATE,
             ANSWER_STATUS
         FROM INQUIRY
+        ORDER BY INQUIRY_DATE DESC
     </select>
 
 

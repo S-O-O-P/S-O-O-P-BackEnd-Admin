@@ -23,4 +23,7 @@ public class HoneypotDTO {
     private String visibilityStatus;
     private String closureStatus;
     private int reportCount;
+    private int displayOrder;
+
+
 }

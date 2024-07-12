@@ -15,10 +15,21 @@ public class HoneypotService {
     private HoneypotMapper honeypotMapper;
 
     public List<HoneypotDTO> getHoneypotList() {
-        return honeypotMapper.getHoneypotList();
+        List<HoneypotDTO> honeypotList = honeypotMapper.getHoneypotList();
+
+        // Assign display order sequentially
+        int displayOrder = honeypotList.size();
+        for (HoneypotDTO honeypot : honeypotList) {
+            honeypot.setDisplayOrder(displayOrder--);
+        }
+
+        return honeypotList;
     }
 
     public HoneypotDTO getHoneypotByHoneypotCode(int honeypotCode) {
+
+
+
         return honeypotMapper.getHoneypotByHoneypotCode(honeypotCode);
     }
 

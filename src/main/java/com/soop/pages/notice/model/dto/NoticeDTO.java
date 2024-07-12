@@ -20,4 +20,5 @@ public class NoticeDTO {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date regDate;
+    private int displayOrder;
 }

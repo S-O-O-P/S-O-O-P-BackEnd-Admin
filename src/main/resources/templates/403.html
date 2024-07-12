@@ -8,7 +8,14 @@
 <body>
 <div class="container">
     <img src="/img/logo.png" alt="403 Error">
-<p>접근이 거부되었습니다. 권한을 확인해 주세요</p>
+    <p>접근이 거부되었습니다. 권한을 확인해 주세요</p>
+    <button onclick="goBack()">이전으로</button>
 </div>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 </body>
 </html>

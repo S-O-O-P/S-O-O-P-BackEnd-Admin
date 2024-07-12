@@ -1,5 +1,6 @@
 package com.soop.pages.inquiry.model.service;
 
+import com.soop.pages.honeypot.model.dto.HoneypotDTO;
 import com.soop.pages.inquiry.model.dto.InquiryDTO;
 import com.soop.pages.inquiry.model.dao.InquiryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,17 @@ public class InquiryService {
     private InquiryMapper inquiryMapper;
 
     public List<InquiryDTO> getInquiryList() {
-        return inquiryMapper.getInquiryList();
+
+        List<InquiryDTO> inquiryList = inquiryMapper.getInquiryList();
+
+        int displayOrder = inquiryList.size();
+        for (InquiryDTO inquiry : inquiryList) {
+            inquiry.setDisplayOrder(displayOrder--);
+        }
+
+        return inquiryList;
     }
+
 
     public InquiryDTO getInquiryByInquiryCode(int inquiryCode) {
         return inquiryMapper.getInquiryByInquiryCode(inquiryCode);
