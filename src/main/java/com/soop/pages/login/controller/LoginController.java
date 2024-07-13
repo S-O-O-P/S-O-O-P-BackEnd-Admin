@@ -3,19 +3,22 @@ package com.soop.pages.login.controller;
 import com.soop.pages.login.model.dto.LoginAndLinkBeeUserDTO;
 import com.soop.pages.login.model.service.LoginService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
-
+@Tag(name = "로그인", description = "관리자 로그인 API입니다.")
 @RestController
 public class LoginController {
 
     @Autowired
     private LoginService loginService;
 
+    @Operation(summary = "관리자 로그인", description = "관리자 아이디와 비밀번호를 통해 관리자 로그인을 관리합니다.")
     @PostMapping
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> loginRequest) {
         String id = loginRequest.get("id");
