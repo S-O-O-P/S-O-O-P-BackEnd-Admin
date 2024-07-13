@@ -2,6 +2,10 @@ package com.soop.pages.customer.controller;
 
 import com.soop.pages.customer.model.dto.LinkBeeUserDTO;
 import com.soop.pages.customer.model.service.CustomerService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,7 +20,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Tag(name = "링크비 회원 정보", description = "링크비 가입 회원 정보를 관리하는 API입니다.")
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
@@ -24,6 +28,7 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
+    @Operation(summary = "링크비 가입 회원 정보 전체 조회", description = "등록되어 있는 회원 전체 정보를 조회합니다.")
     @GetMapping("/")
     public ResponseEntity<Map<String,Object>> getCustomerList() {
         HttpHeaders headers = new HttpHeaders();
@@ -35,7 +40,8 @@ public class CustomerController {
         return new ResponseEntity<>(responseMap, headers, HttpStatus.OK);
     }
 
-
+    @Operation(summary = "링크비 가입 회원 상세 정보 조회", description = "등록되어 있는 회원 상세 정보를 조회합니다.")
+    @Parameter(name = "userCode", description = "회원 코드인 userCode를 통해 해당 회원 상세 정보를 조회합니다.", in = ParameterIn.PATH)
     @GetMapping("/{userCode}")
     public ResponseEntity<LinkBeeUserDTO> getCustomerByUserCode(@PathVariable int userCode) {
         HttpHeaders headers = new HttpHeaders();
