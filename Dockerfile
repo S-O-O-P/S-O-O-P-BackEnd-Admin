@@ -5,7 +5,7 @@ FROM eclipse-temurin:17 AS build
 WORKDIR /app
 
 # Add a unique file to ensure unique layers
-COPY unique-backend-admin-file.txt .
+COPY unique-backend-file.txt .
 
 # Copy the Gradle wrapper and other necessary files
 COPY gradlew .
@@ -30,6 +30,12 @@ WORKDIR /app
 
 # Copy the built application from the build stage
 COPY --from=build /app/build/libs/*.jar app.jar
+
+# Copy the application.yml file
+COPY src/main/resources/application.yml application.yml
+
+# Expose port
+EXPOSE 8081
 
 # Run the application
 CMD ["java", "-jar", "app.jar"]
