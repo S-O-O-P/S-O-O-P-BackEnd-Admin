@@ -19,8 +19,6 @@
         <result property="noticeCode" column="NOTICE_CODE"/>
     </resultMap>
 
-
-
     <select id="getNoticeList" resultMap="NoticeResultMap">
         SELECT
         NOTICE_CODE,
