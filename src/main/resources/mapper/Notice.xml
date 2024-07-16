@@ -104,6 +104,7 @@
         NOTICE
         WHERE NOTICE_CODE = #{id}
     </delete>
+    
     <delete id="deleteNoticeFile" parameterType="_int">
         DELETE FROM
         ATTACHED_FILE
