@@ -28,7 +28,7 @@
         REG_DATE,
         USER_CODE
         FROM NOTICE
-        ORDER BY REG_DATE DESC;
+        ORDER BY NOTICE_CODE DESC;
     </select>
 
     <insert id="registNotice" parameterType="com.soop.pages.notice.model.dto.NoticeDTO" useGeneratedKeys="true" keyProperty="noticeCode">
