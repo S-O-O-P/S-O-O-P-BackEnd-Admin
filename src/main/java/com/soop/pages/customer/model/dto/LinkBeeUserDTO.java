@@ -1,10 +1,11 @@
 package com.soop.pages.customer.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -19,6 +20,7 @@ public class LinkBeeUserDTO {
     private String profilePic;
     private String aboutMe;
     private String userRole;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date signupDate;
     private String signupPlatform;
 }
